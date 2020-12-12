@@ -19,16 +19,19 @@ class Coffee
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"coffee_list"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"coffee_list"})
      */
     private $country;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"coffee_list"})
      */
     private $price;
 
@@ -41,6 +44,17 @@ class Coffee
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Roasting::class, inversedBy="coffees")
+     */
+    private $roasting;
+
+    public function __construct()
+    {
+        //Date par défaut
+        $this->created_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +117,18 @@ class Coffee
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getRoasting(): ?Roasting
+    {
+        return $this->roasting;
+    }
+
+    public function setRoasting(?Roasting $roasting): self
+    {
+        $this->roasting = $roasting;
 
         return $this;
     }

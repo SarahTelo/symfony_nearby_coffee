@@ -37,6 +37,12 @@ class Galery
      */
     private $updated_at;
 
+    public function __construct()
+    {
+        //Date par défaut
+        $this->created_at = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
