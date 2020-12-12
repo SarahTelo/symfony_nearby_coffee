@@ -1,0 +1,6 @@
+coffee: _name, country, price
+
+HAS, 0N roasting, 11 coffee
+
+roasting: _name
+image: _name, slug
