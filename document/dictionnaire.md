@@ -20,7 +20,7 @@
 | created_at | DATETIME | DATETIME             | DEFAULT CURRENT_TIMESTAMP                     | Date de création du café         |
 | updated_at | DATETIME | DATETIME             | DEFAULT CURRENT_TIMESTAMP, NULL               | Date de mise à jour du café      |
 
-## IMAGE
+## GALERY
 
 |    Champ   |   Type   | Création de la table |                 Specific feature              |         Description         |
 |:----------:|:--------:|:--------------------:|:---------------------------------------------:|:---------------------------:|
