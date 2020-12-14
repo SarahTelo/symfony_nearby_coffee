@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ coffee.name }}{% endblock %}
+
+{% block body %}
+
+    <p>Nom: {{ coffee.name }}</p>
+    <ul>
+        <li>Pays: {{ coffee.country }}</li>
+        <li>Torréfaction: {{ coffee.roasting.name }}</li>
+        <li>Prix: {{ coffee.price }} €</li>
+    </ul>
+
+{% endblock %}

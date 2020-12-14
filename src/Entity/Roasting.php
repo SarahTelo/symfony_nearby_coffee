@@ -21,12 +21,12 @@ class Roasting
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"coffee_list"})
      */
     private $created_at;
 

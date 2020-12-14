@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des cafés servis{% endblock %}
+
+{% block body %}
+
+{# TODO : La partie flash doit être mise dans un autre fichier: "_flash" #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{# TODO : Trier par nom et par torréfaction #}
+<table>
+    <th>Nom</th>
+    <th>Torréfaction</th>
+        {% for coffee in coffees %}
+            <tr>
+                <td><a href="{{ path('coffee_detail', {id:coffee.id}) }}">{{ coffee.name }}</a></td>
+                <td>{{ coffee.roasting.name }}</td>
+            </tr>
+        {% endfor %}
+</table>
+
+<hr>
+<a href="{{ path('coffee_add') }}">Ajouter un nouveau café</a>
+
+{% endblock %}

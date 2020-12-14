@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Galery;
+use App\Entity\Gallery;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Galery|null find($id, $lockMode = null, $lockVersion = null)
- * @method Galery|null findOneBy(array $criteria, array $orderBy = null)
- * @method Galery[]    findAll()
- * @method Galery[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Gallery|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Gallery|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Gallery[]    findAll()
+ * @method Gallery[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class GaleryRepository extends ServiceEntityRepository
+class GalleryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Galery::class);
+        parent::__construct($registry, Gallery::class);
     }
 
     // /**
-    //  * @return Galery[] Returns an array of Galery objects
+    //  * @return Gallery[] Returns an array of Gallery objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class GaleryRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Galery
+    public function findOneBySomeField($value): ?Gallery
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.exampleField = :val')

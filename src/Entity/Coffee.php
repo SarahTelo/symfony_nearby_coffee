@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\CoffeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass=CoffeeRepository::class)
  */
@@ -19,19 +21,34 @@ class Coffee
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"coffee_list"})
+     * @Assert\NotBlank(message="Champ obligatoire")
+     * @Assert\Length(
+     *      min=1, max=50,
+     *      minMessage = "Minimum 1 caractère",
+     *      maxMessage = "Maximum 50 caractères",
+     * )
+     * @Assert\Type(type = "string")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"coffee_list"})
+     * @Assert\NotBlank(message="Champ obligatoire")
+     * @Assert\Length(
+     *      min=1, max=50,
+     *      minMessage = "Minimum 1 caractère",
+     *      maxMessage = "Maximum 50 caractères",
+     * )
      */
     private $country;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"coffee_list"})
+     * @Assert\Positive(message = "Entrez un nombre positif")
+     * @Assert\Type(
+     *      type = "integer",
+     *      message = "La valeur {{ value }} n'est pas un nombre.",
+     * )
      */
     private $price;
 
