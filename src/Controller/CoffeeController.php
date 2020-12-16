@@ -64,12 +64,12 @@ class CoffeeController extends AbstractController
 
     /**
      * *Ajout d'un café
-     * @Route("/add", name="_add", methods={"GET", "POST"})
+     * @Route("/new", name="_new", methods={"GET", "POST"})
      * 
      * @param request
      * @return void
      */
-    public function coffeeAdd(Request $request): Response
+    public function coffeeNew(Request $request): Response
     {
         //création du moule "café"
         $coffee = new Coffee();
@@ -84,6 +84,8 @@ class CoffeeController extends AbstractController
         {
             //les données du formulaire sont rentrées dans les propriétés de $coffee
             $coffee = $form->getData();
+            //date de création
+            $coffee->setCreatedAt( new \DateTime('now') );
             //stockage du nom du café pour le réutiliser
             $coffeeName = $coffee->getName();
 
@@ -93,7 +95,8 @@ class CoffeeController extends AbstractController
                 //sauvegarde
                 $em->persist($coffee);
                 //envoi à la BDD
-                //! à décommenter pour sauvegarder en BDD => $em->flush();
+                //! à décommenter pour sauvegarder en BDD => 
+                $em->flush();
 
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
@@ -103,7 +106,7 @@ class CoffeeController extends AbstractController
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'error';
                 $message = "Le café {$coffeeName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
-                $route = 'coffee_add';
+                $route = 'coffee_new';
             }
 
             //remplissage du message d'information
@@ -114,7 +117,60 @@ class CoffeeController extends AbstractController
         //-> sinon affichage du formulaire vide
         else
         {
-            return $this->render('coffee/add.html.twig', ['form_coffee' => $form->createView() ] ); 
+            return $this->render('coffee/new.html.twig', ['form_coffee' => $form->createView() ] ); 
+        }
+    }
+
+    /**
+     * *Edition d'un café
+     * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
+     * 
+     * @param request
+     * @param coffee => (injection de dépendance)
+     * @return void
+     */
+    public function coffeeEdit(Request $request, coffee $coffee): Response
+    {
+        //méthode POST utilisée (plus rapide)
+
+        //les données du café à éditer sont injecté dans le "formulaire" créé
+        $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+
+        //stockage des données du formulaire dans la request
+        $form->handleRequest($request);
+
+        //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            //date de mise à jour
+            $coffee->setUpdatedAt( new \DateTime('now') );
+            //stockage du nom du café pour le réutiliser
+            $coffeeName = $coffee->getName();
+
+            try {
+                //appel de l'entity manager
+                $em = $this->getDoctrine()->getManager();
+                //envoi à la BDD
+                $em->flush();
+
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'success';
+                $message = "Le café {$coffeeName} a bien été modifié";
+            } catch (\Throwable $th) {
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'error';
+                $message = "Le café {$coffeeName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+            }
+
+            //remplissage du message d'information
+            $this->addFlash($result, $message);
+            //redirection vers la route choisie
+            return $this->redirectToRoute('coffee_detail', ['id' => $coffee->getId()]);
+        }
+        //-> sinon affichage du formulaire avec les donées du café à éditer
+        else
+        {
+            return $this->render('coffee/edit.html.twig', ['form_coffee_edit' => $form->createView() ] ); 
         }
     }
 
@@ -123,14 +179,14 @@ class CoffeeController extends AbstractController
      * TODO : mettre le slug du nom du café pour la route
      * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
      * 
-     * @param request
+     * @param coffee => (injection de dépendance)
      * @return void
      */
     public function coffeeDelete(coffee $coffee): Response
     {
         //le café à supprimé a été trouvé par l'injection de dépendance: "coffee $coffee"
         //il n'est pas nécessaire d'appeler le repository
-        
+
         //stockage du nom du café pour le réutiliser
         $coffeeName = $coffee->getName();
 
