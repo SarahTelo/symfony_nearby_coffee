@@ -43,10 +43,10 @@ class Coffee
     private $country;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      * @Assert\Positive(message = "Entrez un nombre positif")
      * @Assert\Type(
-     *      type = "integer",
+     *      type = "float",
      *      message = "La valeur {{ value }} n'est pas un nombre.",
      * )
      */
@@ -102,12 +102,12 @@ class Coffee
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(?int $price): self
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 

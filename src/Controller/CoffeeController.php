@@ -45,7 +45,7 @@ class CoffeeController extends AbstractController
     /**
      * *Affichage du détail du café
      * TODO : mettre le slug du nom du café pour la route
-     * @Route("/{id}/detail", name="_detail", methods={"GET"})
+     * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
      * 
      * @return void
      */
@@ -79,9 +79,7 @@ class CoffeeController extends AbstractController
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
-        //TODO : faire le validator dans l'entity "coffee"
-
-        //si le formulaire a été validé, alors on récupère les données et on le traite
+        //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
         {
             //les données du formulaire sont rentrées dans les propriétés de $coffee
@@ -94,8 +92,8 @@ class CoffeeController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 //sauvegarde
                 $em->persist($coffee);
-                //envoie à la BDD
-                //!à décommenter pour sauvegarder en BDD! => $em->flush();
+                //envoi à la BDD
+                //! à décommenter pour sauvegarder en BDD => $em->flush();
 
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
@@ -113,11 +111,49 @@ class CoffeeController extends AbstractController
             //redirection vers la route choisie
             return $this->redirectToRoute($route);
         }
-        //sinon on affiche le formulaire
+        //-> sinon affichage du formulaire vide
         else
         {
-            //sinon, affichage du formulaire vide
             return $this->render('coffee/add.html.twig', ['form_coffee' => $form->createView() ] ); 
         }
+    }
+
+    /**
+     * *Suppression d'un café
+     * TODO : mettre le slug du nom du café pour la route
+     * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
+     * 
+     * @param request
+     * @return void
+     */
+    public function coffeeDelete(coffee $coffee): Response
+    {
+        //le café à supprimé a été trouvé par l'injection de dépendance: "coffee $coffee"
+        //il n'est pas nécessaire d'appeler le repository
+        
+        //stockage du nom du café pour le réutiliser
+        $coffeeName = $coffee->getName();
+
+        try {
+            //appel de l'entity manager
+            $em = $this->getDoctrine()->getManager();
+            //sauvegarde
+            $em->remove($coffee);
+            //envoi à la BDD
+            //! à décommenter pour sauvegarder en BDD => $em->flush();
+
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'success';
+            $message = "Le café {$coffeeName} a bien été supprimé";
+        } catch (\Throwable $th) {
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'error';
+            $message = "Le café {$coffeeName} n'a pas pu être supprimé, veuillez contacter l'administrateur du site.";
+        }
+
+        //remplissage du message d'information
+        $this->addFlash($result, $message);
+        //redirection vers la route choisie
+        return $this->redirectToRoute('coffee_list');
     }
 }
