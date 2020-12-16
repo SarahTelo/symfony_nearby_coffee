@@ -11,7 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use DateTime;
+//use DateTime;
+use SluggerService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 //use Symfony\Component\Serializer\SerializerInterface;
@@ -49,7 +50,7 @@ class CoffeeController extends AbstractController
      * 
      * @return void
      */
-    public function coffeeDetail($id): Response
+    public function coffeeDetail(int $id): Response
     {
         /** @var CoffeeRepository $repository */
         //appel du repository
@@ -89,14 +90,24 @@ class CoffeeController extends AbstractController
             //stockage du nom du café pour le réutiliser
             $coffeeName = $coffee->getName();
 
+            //instancier le service
+            $slugger = new SluggerService();
+            //appel de la fonction du service
+            $coffeeSlug = $slugger->slugify($coffeeName);
+            //sauvegarde du nom en format slug
+            $coffee->setSlug($coffeeSlug);
+
+            //*possible si création d'un constructeur dans CoffeeController et ajout de la propriété privée "$slugger"
+            //*$coffee->setSlug($this->slugger->slugify($coffeeName));
+
             try {
                 //appel de l'entity manager
                 $em = $this->getDoctrine()->getManager();
                 //sauvegarde
                 $em->persist($coffee);
                 //envoi à la BDD
-                //! à décommenter pour sauvegarder en BDD => 
-                $em->flush();
+                //! à décommenter pour sauvegarder en BDD
+                //!$em->flush();
 
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
