@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ coffee.name }}{% endblock %}
+{% block title %}Nearby Coffee - {{ coffee.name }}{% endblock %}
 
 {% block body %}
 
@@ -11,7 +11,7 @@
         <li>Prix: {{ coffee.price }} €</li>
     </ul>
 
-<button><a href="{{ path('coffee_edit', {id:coffee.id}) }}">Modifier</a></button>
-<button><a href="{{ path('coffee_delete', {id:coffee.id}) }}">Supprimer</a></button>
+<button><a href="{{ path('coffee_edit', {slug:coffee.slug}) }}">Modifier</a></button>
+<button><a href="{{ path('coffee_delete', {slug:coffee.slug}) }}">Supprimer</a></button>
 
 {% endblock %}

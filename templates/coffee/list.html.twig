@@ -10,7 +10,7 @@
     <th>Torréfaction</th>
         {% for coffee in coffees %}
             <tr>
-                <td><a href="{{ path('coffee_detail', {id:coffee.id}) }}">{{ coffee.name }}</a></td>
+                <td><a href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a></td>
                 <td>{{ coffee.roasting.name }}</td>
             </tr>
         {% endfor %}

@@ -19,13 +19,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * *Classe de gestion d'affichage des cafés servis
+ * *Classe de gestion d'affichage des cafés
+ * 
  * @Route("/coffee", name="coffee")
  */
 class CoffeeController extends AbstractController
 {
     /**
      * *Affichage de la liste des cafés avec les détails
+     * 
      * @Route("/list", name="_list", methods={"GET"})
      * 
      * @return void
@@ -45,19 +47,22 @@ class CoffeeController extends AbstractController
 
     /**
      * *Affichage du détail du café
-     * TODO : mettre le slug du nom du café pour la route
-     * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
      * 
+     * @Route("/detail/{slug}", name="_detail", methods={"GET"})
+     * 
+     * @param coffee => (injection de dépendance)
      * @return void
      */
-    public function coffeeDetail(int $id): Response
+    public function coffeeDetail(Coffee $coffee): Response
     {
-        /** @var CoffeeRepository $repository */
-        //appel du repository
-        $repository = $this->getDoctrine()->getRepository(Coffee::class);
-        //appel de la fonction présente dans le repository
-        $coffee = $repository->find($id);
+        //EN PASSANT PAR L'ID:
+        //@Route("/detail/{slug}", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
+        //public function coffeeDetail(int $id): Response
+        // /*** @var CoffeeRepository $repository */
+        //$repository = $this->getDoctrine()->getRepository(Coffee::class);
+        //$coffee = $repository->find($id);
 
+        //avec le slug, Doctrine fait: select*from coffee where slug='{slug}'
         return $this->render('coffee/detail.html.twig', [
             'coffee' => $coffee,
         ]);
@@ -65,6 +70,7 @@ class CoffeeController extends AbstractController
 
     /**
      * *Ajout d'un café
+     * 
      * @Route("/new", name="_new", methods={"GET", "POST"})
      * 
      * @param request
@@ -128,13 +134,14 @@ class CoffeeController extends AbstractController
         //-> sinon affichage du formulaire vide
         else
         {
-            return $this->render('coffee/new.html.twig', ['form_coffee' => $form->createView() ] ); 
+            return $this->render('coffee/new.html.twig', [ 'form_coffee' => $form->createView() ] ); 
         }
     }
 
     /**
      * *Edition d'un café
-     * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
+     * 
+     * @Route("/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
      * @param request
      * @param coffee => (injection de dépendance)
@@ -158,6 +165,13 @@ class CoffeeController extends AbstractController
             //stockage du nom du café pour le réutiliser
             $coffeeName = $coffee->getName();
 
+            //instancier le service
+            $slugger = new SluggerService();
+            //appel de la fonction du service
+            $coffeeSlug = $slugger->slugify($coffeeName);
+            //sauvegarde du nom en format slug
+            $coffee->setSlug($coffeeSlug);
+
             try {
                 //appel de l'entity manager
                 $em = $this->getDoctrine()->getManager();
@@ -176,26 +190,26 @@ class CoffeeController extends AbstractController
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute('coffee_detail', ['id' => $coffee->getId()]);
+            return $this->redirectToRoute('coffee_detail', [ 'slug' => $coffee->getSlug() ]);
         }
         //-> sinon affichage du formulaire avec les donées du café à éditer
         else
         {
-            return $this->render('coffee/edit.html.twig', ['form_coffee_edit' => $form->createView() ] ); 
+            return $this->render('coffee/edit.html.twig', [ 'form_coffee_edit' => $form->createView(), 'name' => $coffee->getName() ]); 
         }
     }
 
     /**
      * *Suppression d'un café
-     * TODO : mettre le slug du nom du café pour la route
-     * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
+     * 
+     * @Route("/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
      * @param coffee => (injection de dépendance)
      * @return void
      */
     public function coffeeDelete(coffee $coffee): Response
     {
-        //le café à supprimé a été trouvé par l'injection de dépendance: "coffee $coffee"
+        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
         //il n'est pas nécessaire d'appeler le repository
 
         //stockage du nom du café pour le réutiliser
@@ -223,4 +237,5 @@ class CoffeeController extends AbstractController
         //redirection vers la route choisie
         return $this->redirectToRoute('coffee_list');
     }
+
 }
