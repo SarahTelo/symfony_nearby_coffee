@@ -7,7 +7,7 @@
 | id         | INT      |                      | PRIMARY KEY, UNSIGNED, AUTO_INCREMENT, UNIQUE | L'identifiant de l'utilisateur |
 | name       | VARCHAR  | STRING               | UNIQUE                                        | Nom du café                    |
 | country    | VARCHAR  | STRING               |                                               | Pays d'origine du café         |
-| price      | INT      | INT                  | UNSIGNED                                      | Prix du café                   |
+| price      | FLOAT    | FLOAT                | UNSIGNED                                      | Prix du café                   |
 | created_at | DATETIME | DATETIME             | DEFAULT   CURRENT_TIMESTAMP                   | Date de création du café       |
 | updated_at | DATETIME | DATETIME             | DEFAULT   CURRENT_TIMESTAMP, NULL             | Date de mise à jour du café    |
 
@@ -20,7 +20,7 @@
 | created_at | DATETIME | DATETIME             | DEFAULT CURRENT_TIMESTAMP                     | Date de création du café         |
 | updated_at | DATETIME | DATETIME             | DEFAULT CURRENT_TIMESTAMP, NULL               | Date de mise à jour du café      |
 
-## GALERY
+## GALLERY
 
 |    Champ   |   Type   | Création de la table |                 Specific feature              |         Description         |
 |:----------:|:--------:|:--------------------:|:---------------------------------------------:|:---------------------------:|

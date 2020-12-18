@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - {{ coffee.name }}{% endblock %}
+
+{% block body %}
+
+    <p>Nom: {{ coffee.name }}</p>
+    <ul>
+        <li>Pays: {{ coffee.country }}</li>
+        <li>Torréfaction: {{ coffee.roasting.name }}</li>
+        <li>Prix: {{ coffee.price }} €</li>
+    </ul>
+
+<button><a href="{{ path('coffee_edit', {slug:coffee.slug}) }}">Modifier</a></button>
+<button><a href="{{ path('coffee_delete', {slug:coffee.slug}) }}">Supprimer</a></button>
+
+{% endblock %}

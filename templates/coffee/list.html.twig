@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Liste des cafés servis{% endblock %}
+
+{% block body %}
+
+{# TODO : Trier par nom et par torréfaction #}
+<table>
+    <th>Nom</th>
+    <th>Torréfaction</th>
+        {% for coffee in coffees %}
+            <tr>
+                <td><a href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a></td>
+                <td>{{ coffee.roasting.name }}</td>
+            </tr>
+        {% endfor %}
+</table>
+
+<hr>
+<a href="{{ path('coffee_new') }}">Ajouter un nouveau café</a>
+
+{% endblock %}

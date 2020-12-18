@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GaleryRepository;
+use App\Repository\GalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=GaleryRepository::class)
+ * @ORM\Entity(repositoryClass=GalleryRepository::class)
  */
-class Galery
+class Gallery
 {
     /**
      * @ORM\Id
@@ -36,6 +36,12 @@ class Galery
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
+
+    public function __construct()
+    {
+        //Date par défaut
+        $this->created_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {

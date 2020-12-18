@@ -19,6 +19,26 @@ class CoffeeRepository extends ServiceEntityRepository
         parent::__construct($registry, Coffee::class);
     }
 
+    /**
+     * *Rajout du détail de roasting dans la recherche de tous les cafés
+     *
+     * @return array
+     */
+    public function findAllDetailsList()
+    {
+        //SELECT * FROM coffee (as coffees => pour queryBuilder)
+        $queryBuilder = $this->createQueryBuilder('coffees');
+        //LEFT JOIN roasting ON coffee.roasting_id = roasting.id
+        $queryBuilder->leftJoin('coffees.roasting', 'roasting');
+        //ajout dans la recherche
+        $queryBuilder->addSelect('roasting');
+        //stockage de la réponse
+        $query = $queryBuilder->getQuery();
+        //envoi des résultats
+        return $query->getResult();
+    }
+
+
     // /**
     //  * @return Coffee[] Returns an array of Coffee objects
     //  */
