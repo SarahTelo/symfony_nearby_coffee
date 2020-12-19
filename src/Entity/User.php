@@ -6,10 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-//TODO faire les asserts
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+//TODO mettre à "false" le "match" de firstname et lastname (pour activer la regex)
+//TODO mettre à 8 le "min" de "length" du password
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email", message="L'utilisateur existe déjà")
  */
 class User implements UserInterface
 {
@@ -22,27 +27,56 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Email(
+     *      message = "Le format de l'adresse mail est incorrect."
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Assert\NotBlank
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
+     * @Assert\Regex(
+     *      pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*).+$^",
+     *      match = true,
+     *      message = "Votre mot de passe doit contenir au moins 8 caractères dont 1 majuscule, 1 minuscule et 1 chiffre"
+     * )
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 255,
+     *      minMessage = "Minimum {{ limit }} caractères.",
+     *      maxMessage = "Maximum {{ limit }} caractères."
+     * )
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Regex(
+     *      pattern = "[0-9]",
+     *      match = false,
+     *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Regex(
+     *      pattern = "[0-9]",
+     *      match = false,
+     *      message = "Le nom ne doit pas contenir de chiffres ou de nombres."
+     * )
      */
     private $lastname;
 

@@ -57,8 +57,11 @@ class UserType extends AbstractType
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots passent doivent être identiques.',
             'required' => true,
-            'first_options'  => ['label' => 'Saisissez votre mot de passe'],
-            'second_options' => ['label' => 'Saisir à nouveau votre mot de passe'],
+            'first_options'  => [
+                'label' => 'Saisissez votre mot de passe', 
+                'help'  => 'Minimum 8 caractères dont 1 majuscule, 1 minuscule et 1 chiffre'],
+            'second_options' => [
+                'label' => 'Saisir à nouveau votre mot de passe'],
         ])
         ->add('save', SubmitType::class, [
             'label' => 'sauvegarder',

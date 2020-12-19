@@ -119,7 +119,7 @@ class CoffeeController extends AbstractController
                 $route = 'coffee_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
-                $result = 'error';
+                $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
                 $route = 'coffee_new';
             }
@@ -181,7 +181,7 @@ class CoffeeController extends AbstractController
                 $message = "Le café {$coffeeName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
-                $result = 'error';
+                $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
             }
 
@@ -226,7 +226,7 @@ class CoffeeController extends AbstractController
             $message = "Le café {$coffeeName} a bien été supprimé";
         } catch (\Throwable $th) {
             //remplissage des variables pour le message d'information d'état final
-            $result = 'error';
+            $result = 'danger';
             $message = "Le café {$coffeeName} n'a pas pu être supprimé, veuillez contacter l'administrateur du site.";
         }
 

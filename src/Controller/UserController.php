@@ -91,7 +91,7 @@ class UserController extends AbstractController
                 //$route = 'user_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
-                $result = 'error';
+                $result = 'danger';
                 $message = "L'utilisateur {$userFullName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
                 //$route = 'user_new';
             }
