@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 //TODO : créer un service qui contrôlera si le rôle de l'utilisateur est Admin ou Responsible => afin de l'appeler pour l'édition d'un utilisateur
 
-//TODO : mettre les token csrf dans les routes POST
 //TODO : mettre un autre token dans les autres routes
 
 //TODO : comprendre la redirection automatique

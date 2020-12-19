@@ -111,23 +111,23 @@ class CoffeeController extends AbstractController
                 $em->persist($coffee);
                 //envoi à la BDD
                 //! à décommenter pour sauvegarder en BDD
-                //!$em->flush();
-
+                $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "Le café {$coffeeName} a bien été ajouté";
-                $route = 'coffee_list';
+                $route = 'coffee_detail';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
                 $route = 'coffee_new';
+                $coffeeSlug = null;
             }
 
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute($route, ['slug' => $coffeeSlug]);
         }
         //-> sinon affichage du formulaire vide
         else
@@ -175,7 +175,6 @@ class CoffeeController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 //envoi à la BDD
                 $em->flush();
-
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "Le café {$coffeeName} a bien été modifié";
@@ -219,8 +218,8 @@ class CoffeeController extends AbstractController
             //sauvegarde
             $em->remove($coffee);
             //envoi à la BDD
-            //! à décommenter pour sauvegarder en BDD => $em->flush();
-
+            //! à décommenter pour sauvegarder en BDD => 
+            //!$em->flush();
             //remplissage des variables pour le message d'information d'état final
             $result = 'success';
             $message = "Le café {$coffeeName} a bien été supprimé";

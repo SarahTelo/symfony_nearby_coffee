@@ -20,6 +20,7 @@ class CoffeeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
+        //les token csrf sont implémentés de base
         $builder
         //ajout des caractéristiques du champ
         ->add('name', TextType::class, [
