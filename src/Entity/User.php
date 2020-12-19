@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+//TODO faire les asserts
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -48,6 +50,16 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
 
     public function getId(): ?int
     {
@@ -159,6 +171,30 @@ class User implements UserInterface
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

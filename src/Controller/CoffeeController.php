@@ -8,12 +8,12 @@ use App\Repository\CoffeeRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
-//use DateTime;
-use SluggerService;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+use SluggerService;
+//use DateTime;
 //use Symfony\Component\Serializer\SerializerInterface;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -70,7 +70,7 @@ class CoffeeController extends AbstractController
     /**
      * *Ajout d'un café
      * 
-     * @Route("/new", name="_new", methods={"GET", "POST"})
+     * @Route("/admin/new", name="_new", methods={"GET", "POST"})
      * 
      * @param request
      * @return void
@@ -81,7 +81,6 @@ class CoffeeController extends AbstractController
         $coffee = new Coffee();
         //création du moule "formulaire" de type "Coffee"
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
-
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -140,7 +139,7 @@ class CoffeeController extends AbstractController
     /**
      * *Edition d'un café
      * 
-     * @Route("/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
+     * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
      * @param request
      * @param coffee => (injection de dépendance)
@@ -201,7 +200,7 @@ class CoffeeController extends AbstractController
     /**
      * *Suppression d'un café
      * 
-     * @Route("/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
+     * @Route("/admin/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
      * @param coffee => (injection de dépendance)
      * @return void

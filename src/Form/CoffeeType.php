@@ -21,7 +21,7 @@ class CoffeeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
-        //ajout des caractéristique du champ
+        //ajout des caractéristiques du champ
         ->add('name', TextType::class, [
             'label' => 'Nom du café',
             'help' => 'champ obligatoire',
