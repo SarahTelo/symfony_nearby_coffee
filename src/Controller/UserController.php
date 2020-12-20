@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserPasswordType;
+use App\Repository\UserRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,10 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+//! TODO : revérifier les routes et les autorisations
 //TODO : créer un service qui contrôlera si le rôle de l'utilisateur est Admin ou Responsible => afin de l'appeler pour l'édition d'un utilisateur
+//    $hasAccess = $this->isGranted('ROLE_ADMIN'); //renvoi un booléen
+//    $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
 //TODO : mettre un autre token dans les autres routes
-
 //TODO : comprendre la redirection automatique
 
 /**
@@ -33,28 +37,66 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/list", name="_list")
+     * *Affichage de la liste des utilisateurs avec les détails
+     * 
+     * @Route("/list", name="_list", methods={"GET"})
+     * 
+     * @return void
      */
-    public function index(): Response
+    public function userList(): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        /** @var UserRepository $repository */
+        //appel du repository
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        //appel de la fonction présente dans le repository
+        $users = $repository->findAll();
+
+        return $this->render('user/list.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * *Affichage du détail d'un utilisateur
+     * 
+     * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
+     * 
+     * @param id
+     * @return void
+     */
+    public function userDetail(int $id): Response
+    {
+        //récupération de l'utilisateur actuel
+        $currentUserId = $this->getUser()->getId();
+        //vérification de ses rôles
+        $hasAccess = $this->isGranted('ROLE_ADMIN');
+        //s'il n'est pas admin, alors l'id sera le sien
+        if ($hasAccess !== true) {
+            $id = $currentUserId;
+        }
+
+        /** @var UserRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+
+        return $this->render('user/detail.html.twig', [
+            'user' => $user,
         ]);
     }
 
     /**
      * *Ajout d'un utilisateur
      * 
-     * @Route("/new", name="_new")
+     * @Route("/new", name="_new", methods={"POST", "GET"})
      * 
      * @param request
      * @return void
      */
     public function userNew(Request $request): Response
     {
-        //création du moule'utilisateur"
+        //création du moule "utilisateur"
         $user = new User();
-        //création du moule "formulaire" de type "Coffee"
+        //création du moule "formulaire" de type "User"
         $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
@@ -64,14 +106,12 @@ class UserController extends AbstractController
         {
             //les données du formulaire sont rentrées dans les propriétés de $user
             $user = $form->getData();
-
             //date de création
             $user->setCreatedAt( new \DateTime('now') );
             //stockage du mdp transmis par le formulaire
             $originalPassword = $user->getPassword();
             //encodage du mdp
             $user->setPassword($this->passwordEncoder->encodePassword($user, $originalPassword));
-
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
 
@@ -83,16 +123,15 @@ class UserController extends AbstractController
                 //envoi à la BDD
                 //! à décommenter pour sauvegarder en BDD
                 $em->flush();
-
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "L'utilisateur {$userFullName} a bien été ajouté";
-                //$route = 'user_list';
+                $route = 'user_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "L'utilisateur {$userFullName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
-                //$route = 'user_new';
+                $route = 'user_new';
             }
 
             //remplissage du message d'information
@@ -105,5 +144,102 @@ class UserController extends AbstractController
         {
             return $this->render('user/new.html.twig', [ 'form_user' => $form->createView() ] ); 
         }
+    }
+
+    /**
+     * *Edition du profil d'un utilisateur
+     * 
+     * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * 
+     * @param request
+     * @return void
+     */
+    public function userEdit(Request $request, int $id): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //méthode POST utilisée (plus rapide)
+        /** @var UserRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+        //les données du utilisateur à éditer sont injecté dans le "formulaire" créé
+        $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage des données du formulaire dans la request
+        $form->handleRequest($request);
+
+        //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            //date de mise à jour
+            $user->setUpdatedAt( new \DateTime('now') );
+            //stockage du nom de l'utilisateur pour le réutiliser
+            $userFullName = $user->getFirstname() . " " . $user->getLastname();
+
+            try {
+                //appel de l'entity manager
+                $em = $this->getDoctrine()->getManager();
+                //envoi à la BDD
+                $em->flush();
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'success';
+                $message = "Le utilisateur {$userFullName} a bien été modifié";
+            } catch (\Throwable $th) {
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'danger';
+                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+            }
+
+            //remplissage du message d'information
+            $this->addFlash($result, $message);
+            //redirection vers la route choisie
+            return $this->redirectToRoute('user_detail', [ 'id' => $user->getId() ]);
+        }
+        //-> sinon affichage du formulaire avec les données du utilisateur à éditer
+        else
+        {
+            return $this->render('user/edit.html.twig', [ 
+                'form_user_edit' => $form->createView(), 
+                'name' => $user->getFirstname() . " " . $user->getLastname(), 
+                'userDetailId' => $user->getId() ]); 
+                
+        }
+    }
+
+    /**
+     * *Suppression d'un utilisateur
+     * 
+     * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
+     * 
+     * @param id 
+     * @return void
+     */
+    public function userDelete(int $id): Response
+    {
+        /** @var UserRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+        //stockage du nom de l'utilisateur pour le réutiliser
+        $userFullName = $user->getFirstname() . " " . $user->getLastname();
+
+        try {
+            //appel de l'entity manager
+            $em = $this->getDoctrine()->getManager();
+            //sauvegarde
+            $em->remove($user);
+            //envoi à la BDD
+            //! à décommenter pour sauvegarder en BDD => 
+            //!$em->flush();
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'success';
+            $message = "L'utilisateur {$userFullName} a bien été supprimé";
+        } catch (\Throwable $th) {
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'danger';
+            $message = "L'utilisateur {$userFullName} n'a pas pu être supprimé, veuillez contacter l'administrateur du site.";
+        }
+
+        //remplissage du message d'information
+        $this->addFlash($result, $message);
+        //redirection vers la route choisie
+        return $this->redirectToRoute('user_list');
     }
 }

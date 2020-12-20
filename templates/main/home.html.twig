@@ -8,20 +8,6 @@
 
 <hr>
 
-{% if is_granted('ROLE_ADMIN') %}
-    <button><a href="{{ path('user_new') }}">Ajouter un utilisateur</a></button>
-{% endif %}
-
-<hr>
-
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
-{% else %}
-    <button><a href="{{ path('app_login') }}">connexion</a></button>
-{% endif %}
-
-<hr>
-
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <p>Hello {{ app.user.firstname }} !</p>
 {% endif %}

@@ -55,7 +55,7 @@ class CoffeeController extends AbstractController
     public function coffeeDetail(Coffee $coffee): Response
     {
         //EN PASSANT PAR L'ID:
-        //@Route("/detail/{slug}", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
+        //@Route("/detail/{id}", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
         //public function coffeeDetail(int $id): Response
         // /*** @var CoffeeRepository $repository */
         //$repository = $this->getDoctrine()->getRepository(Coffee::class);
@@ -151,7 +151,6 @@ class CoffeeController extends AbstractController
 
         //les données du café à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
-
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -189,7 +188,7 @@ class CoffeeController extends AbstractController
             //redirection vers la route choisie
             return $this->redirectToRoute('coffee_detail', [ 'slug' => $coffee->getSlug() ]);
         }
-        //-> sinon affichage du formulaire avec les donées du café à éditer
+        //-> sinon affichage du formulaire avec les données du café à éditer
         else
         {
             return $this->render('coffee/edit.html.twig', [ 'form_coffee_edit' => $form->createView(), 'name' => $coffee->getName() ]); 
