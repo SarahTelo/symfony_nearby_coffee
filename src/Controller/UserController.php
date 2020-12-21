@@ -14,16 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-//! TODO : revérifier les routes et les autorisations
-//TODO : créer un service qui contrôlera si le rôle de l'utilisateur est Admin ou Responsible => afin de l'appeler pour l'édition d'un utilisateur
-//    $hasAccess = $this->isGranted('ROLE_ADMIN'); //renvoi un booléen
-//    $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
 //TODO : mettre un autre token dans les autres routes
 //TODO : comprendre la redirection automatique
 
 /**
- * *Classe de gestion des utilisateurs
+ * *Classe de gestion des utilisateurs (IsGranted)
  * 
  * @Route("/admin/user", name="user")
  */
@@ -61,7 +56,7 @@ class UserController extends AbstractController
      * 
      * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
      * 
-     * @param id
+     * @param id $id
      * @return void
      */
     public function userDetail(int $id): Response
@@ -89,11 +84,13 @@ class UserController extends AbstractController
      * 
      * @Route("/new", name="_new", methods={"POST", "GET"})
      * 
-     * @param request
+     * @param request $request
      * @return void
      */
     public function userNew(Request $request): Response
     {
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         //création du moule "utilisateur"
         $user = new User();
         //création du moule "formulaire" de type "User"
@@ -127,17 +124,19 @@ class UserController extends AbstractController
                 $result = 'success';
                 $message = "L'utilisateur {$userFullName} a bien été ajouté";
                 $route = 'user_list';
+                $userId = $user->getId();
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "L'utilisateur {$userFullName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
                 $route = 'user_new';
+                $userId = null;
             }
 
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute($route, ['userId' => $userId]);
         }
         //-> sinon affichage du formulaire vide
         else
@@ -151,11 +150,12 @@ class UserController extends AbstractController
      * 
      * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
-     * @param request
+     * @param request $request
      * @return void
      */
     public function userEdit(Request $request, int $id): Response
     {
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         //méthode POST utilisée (plus rapide)
         /** @var UserRepository $repository */
@@ -200,7 +200,6 @@ class UserController extends AbstractController
                 'form_user_edit' => $form->createView(), 
                 'name' => $user->getFirstname() . " " . $user->getLastname(), 
                 'userDetailId' => $user->getId() ]); 
-                
         }
     }
 
@@ -209,11 +208,13 @@ class UserController extends AbstractController
      * 
      * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
      * 
-     * @param id 
+     * @param id $id
      * @return void
      */
     public function userDelete(int $id): Response
     {
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         /** @var UserRepository $repository */
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);

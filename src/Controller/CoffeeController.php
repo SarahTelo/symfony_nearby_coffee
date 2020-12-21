@@ -54,13 +54,7 @@ class CoffeeController extends AbstractController
      */
     public function coffeeDetail(Coffee $coffee): Response
     {
-        //EN PASSANT PAR L'ID:
-        //@Route("/detail/{id}", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
-        //public function coffeeDetail(int $id): Response
-        // /*** @var CoffeeRepository $repository */
-        //$repository = $this->getDoctrine()->getRepository(Coffee::class);
-        //$coffee = $repository->find($id);
-
+        //EN PASSANT PAR L'ID: voir UserController/userDetail
         //avec le slug, Doctrine fait: select*from coffee where slug='{slug}'
         return $this->render('coffee/detail.html.twig', [
             'coffee' => $coffee,
@@ -72,7 +66,7 @@ class CoffeeController extends AbstractController
      * 
      * @Route("/admin/new", name="_new", methods={"GET", "POST"})
      * 
-     * @param request
+     * @param request $request
      * @return void
      */
     public function coffeeNew(Request $request): Response
@@ -141,12 +135,14 @@ class CoffeeController extends AbstractController
      * 
      * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
-     * @param request
+     * @param request $request
      * @param coffee => (injection de dépendance)
      * @return void
      */
     public function coffeeEdit(Request $request, coffee $coffee): Response
     {
+        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
+        //il n'est pas nécessaire d'appeler le repository
         //méthode POST utilisée (plus rapide)
 
         //les données du café à éditer sont injecté dans le "formulaire" créé
@@ -191,7 +187,9 @@ class CoffeeController extends AbstractController
         //-> sinon affichage du formulaire avec les données du café à éditer
         else
         {
-            return $this->render('coffee/edit.html.twig', [ 'form_coffee_edit' => $form->createView(), 'name' => $coffee->getName() ]); 
+            return $this->render('coffee/edit.html.twig', [ 
+                'form_coffee_edit' => $form->createView(), 
+                'name' => $coffee->getName() ]); 
         }
     }
 
@@ -205,9 +203,6 @@ class CoffeeController extends AbstractController
      */
     public function coffeeDelete(coffee $coffee): Response
     {
-        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
-        //il n'est pas nécessaire d'appeler le repository
-
         //stockage du nom du café pour le réutiliser
         $coffeeName = $coffee->getName();
 

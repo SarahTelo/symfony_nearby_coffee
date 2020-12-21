@@ -9,8 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-//TODO mettre à "false" le "match" de firstname et lastname (pour activer la regex)
-//TODO mettre à 8 le "min" de "length" du password
+//todo mettre à "false" le "match" de firstname et lastname (pour activer la regex)
+//todo mettre à 8 le "min" de "length" du password
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)

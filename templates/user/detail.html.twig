@@ -14,4 +14,11 @@
 <button><a href="{{ path('user_edit', {id:user.id}) }}">Modifier</a></button>
 <button><a href="{{ path('user_delete', {id:user.id}) }}">Supprimer</a></button>
 
+<hr>
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('user_list') }}">Retour</a>
+{% else %}
+    <a href="{{ path('main_home') }}">Retour</a>
+{% endif %}
+
 {% endblock %}
