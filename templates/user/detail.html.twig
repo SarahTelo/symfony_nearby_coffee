@@ -7,7 +7,13 @@
     <p>Nom: {{ user.firstname }} {{ user.lastname }}</p>
     <ul>
         <li>Email: {{ user.email }}</li>
-        {#<li>Rôle: {{ user.role }}</li>#}
+        <li>Rôles: 
+            <ul>
+                {% for key, role in roles %}
+                    <li>{{ role }}</li>
+                {% endfor %} 
+            </ul>
+        </li>
         <li>Status: {{ user.status }}</li>
     </ul>
 

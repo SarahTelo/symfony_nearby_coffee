@@ -22,9 +22,11 @@
     {{ form_end(form_user_edit, {'render_rest': false}) }}
 {% endif %}
 
+{{ form_start(form_user_edit) }}
+    {{ form_row(form_user_edit.save) }}
+{{ form_end(form_user_edit, {'render_rest': false}) }}
+
 <hr>
 <a href="{{ path('user_detail', {id:userDetailId}) }}">Retour</a>
-
-
 
 {% endblock %}

@@ -43,7 +43,7 @@ class UserType extends AbstractType
         //!->add('status', TextType::class, [ 'label' => '??' ])
         //ChoiceType: choix multiple
         ->add('roles', ChoiceType::class, [
-            'label' => 'Rôle attribué',
+            'label' => 'Rôle(s) attribué(s)',
             //multiple à true : car les choix ne viennent pas d'une entité
             'multiple' => true,
             'expanded' => true,

@@ -68,14 +68,29 @@ class UserController extends AbstractController
         //s'il n'est pas admin, alors l'id sera le sien
         if ($hasAccess !== true) {
             $id = $currentUserId;
-        }
+        }   
 
         /** @var UserRepository $repository */
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);
+        
+        //réécriture des rôles
+        //TODO : à factoriser
+        $arrayRoles = $user->getRoles();
+        $arrayRolesModify = [];
+        foreach ($arrayRoles as $value) {
+            if ($value == 'ROLE_ADMIN') {
+                $arrayRolesModify[] = 'Administrateur';
+            } elseif ($value == 'ROLE_RESPONSIBLE') {
+                $arrayRolesModify[] = 'Responsable';
+            } else {
+                continue;
+            }
+        }
 
         return $this->render('user/detail.html.twig', [
             'user' => $user,
+            'roles' => $arrayRolesModify,
         ]);
     }
 
@@ -173,6 +188,23 @@ class UserController extends AbstractController
             $user->setUpdatedAt( new \DateTime('now') );
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
+
+
+            //TODO : réécriture des rôles
+            $arrayRoles = $user->getRoles();
+            $arrayRolesModify = [];
+            foreach ($arrayRoles as $value) {
+                if ($value == 'ROLE_ADMIN') {
+                    $arrayRolesModify[] = 'Administrateur';
+                } elseif ($value == 'ROLE_RESPONSIBLE') {
+                    $arrayRolesModify[] = 'Responsable';
+                } else {
+                    continue;
+                }
+            }
+            $roles1 = implode(", ", $arrayRolesModify);
+            $user->setStatus($roles1);
+            //TODO : à revérifier
 
             try {
                 //appel de l'entity manager

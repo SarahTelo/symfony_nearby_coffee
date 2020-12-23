@@ -13,7 +13,7 @@
             <tr>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.firstname }}</td>
-                {#<td>{{ user.role }}</td>#}
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td><a href="{{ path('user_detail', {id:user.id}) }}">Détail</a></td>
             </tr>
         {% endfor %}
