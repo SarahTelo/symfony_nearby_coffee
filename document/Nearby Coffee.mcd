@@ -1,6 +1,7 @@
-coffee: _name, country, price
+coffee: _name, country, price, slug
 
 HAS, 0N roasting, 11 coffee
 
-roasting: _name
+roasting: _name, slug
 image: _name, slug
+user: _email, password, roles, firstname, lastname, status

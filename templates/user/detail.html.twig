@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.firstname }} {{ user.lastname }}{% endblock %}
+
+{% block body %}
+
+    <p>Nom: {{ user.firstname }} {{ user.lastname }}</p>
+    <ul>
+        <li>Email: {{ user.email }}</li>
+        <li>Rôles: 
+            <ul>
+                {% for key, role in roles %}
+                    <li>{{ role }}</li>
+                {% endfor %} 
+            </ul>
+        </li>
+        <li>Status: {{ user.status }}</li>
+    </ul>
+
+<button><a href="{{ path('user_edit', {id:user.id}) }}">Modifier</a></button>
+<button><a href="{{ path('user_delete', {id:user.id}) }}">Supprimer</a></button>
+
+<hr>
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('user_list') }}">Retour</a>
+{% else %}
+    <a href="{{ path('main_home') }}">Retour</a>
+{% endif %}
+
+{% endblock %}

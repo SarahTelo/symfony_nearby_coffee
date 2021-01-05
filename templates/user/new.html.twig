@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+
+{{ form(form_user) }}
+
+<hr>
+<a href="{{ path('user_list') }}">Retour</a>
+
+{% endblock %}

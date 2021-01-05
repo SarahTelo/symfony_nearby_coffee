@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+
+<table>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Role</th>
+    <th></th>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td><a href="{{ path('user_detail', {id:user.id}) }}">Détail</a></td>
+            </tr>
+        {% endfor %}
+</table>
+
+<hr>
+<button><a href="{{ path('user_new') }}">Ajouter un utilisateur</a></button>
+
+{% endblock %}

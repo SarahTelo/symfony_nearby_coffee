@@ -8,12 +8,12 @@ use App\Repository\CoffeeRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
-//use DateTime;
-use SluggerService;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+use SluggerService;
+//use DateTime;
 //use Symfony\Component\Serializer\SerializerInterface;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -54,13 +54,7 @@ class CoffeeController extends AbstractController
      */
     public function coffeeDetail(Coffee $coffee): Response
     {
-        //EN PASSANT PAR L'ID:
-        //@Route("/detail/{slug}", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
-        //public function coffeeDetail(int $id): Response
-        // /*** @var CoffeeRepository $repository */
-        //$repository = $this->getDoctrine()->getRepository(Coffee::class);
-        //$coffee = $repository->find($id);
-
+        //EN PASSANT PAR L'ID: voir UserController/userDetail
         //avec le slug, Doctrine fait: select*from coffee where slug='{slug}'
         return $this->render('coffee/detail.html.twig', [
             'coffee' => $coffee,
@@ -70,9 +64,9 @@ class CoffeeController extends AbstractController
     /**
      * *Ajout d'un café
      * 
-     * @Route("/new", name="_new", methods={"GET", "POST"})
+     * @Route("/admin/new", name="_new", methods={"GET", "POST"})
      * 
-     * @param request
+     * @param request $request
      * @return void
      */
     public function coffeeNew(Request $request): Response
@@ -81,7 +75,6 @@ class CoffeeController extends AbstractController
         $coffee = new Coffee();
         //création du moule "formulaire" de type "Coffee"
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
-
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -112,23 +105,23 @@ class CoffeeController extends AbstractController
                 $em->persist($coffee);
                 //envoi à la BDD
                 //! à décommenter pour sauvegarder en BDD
-                //!$em->flush();
-
+                $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "Le café {$coffeeName} a bien été ajouté";
-                $route = 'coffee_list';
+                $route = 'coffee_detail';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
-                $result = 'error';
+                $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
                 $route = 'coffee_new';
+                $coffeeSlug = null;
             }
 
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute($route, ['slug' => $coffeeSlug]);
         }
         //-> sinon affichage du formulaire vide
         else
@@ -140,19 +133,20 @@ class CoffeeController extends AbstractController
     /**
      * *Edition d'un café
      * 
-     * @Route("/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
+     * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
-     * @param request
+     * @param request $request
      * @param coffee => (injection de dépendance)
      * @return void
      */
     public function coffeeEdit(Request $request, coffee $coffee): Response
     {
+        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
+        //il n'est pas nécessaire d'appeler le repository
         //méthode POST utilisée (plus rapide)
 
         //les données du café à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
-
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -176,13 +170,12 @@ class CoffeeController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 //envoi à la BDD
                 $em->flush();
-
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "Le café {$coffeeName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
-                $result = 'error';
+                $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
             }
 
@@ -191,26 +184,25 @@ class CoffeeController extends AbstractController
             //redirection vers la route choisie
             return $this->redirectToRoute('coffee_detail', [ 'slug' => $coffee->getSlug() ]);
         }
-        //-> sinon affichage du formulaire avec les donées du café à éditer
+        //-> sinon affichage du formulaire avec les données du café à éditer
         else
         {
-            return $this->render('coffee/edit.html.twig', [ 'form_coffee_edit' => $form->createView(), 'name' => $coffee->getName() ]); 
+            return $this->render('coffee/edit.html.twig', [ 
+                'form_coffee_edit' => $form->createView(), 
+                'name' => $coffee->getName() ]); 
         }
     }
 
     /**
      * *Suppression d'un café
      * 
-     * @Route("/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
+     * @Route("/admin/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
      * @param coffee => (injection de dépendance)
      * @return void
      */
     public function coffeeDelete(coffee $coffee): Response
     {
-        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
-        //il n'est pas nécessaire d'appeler le repository
-
         //stockage du nom du café pour le réutiliser
         $coffeeName = $coffee->getName();
 
@@ -220,14 +212,14 @@ class CoffeeController extends AbstractController
             //sauvegarde
             $em->remove($coffee);
             //envoi à la BDD
-            //! à décommenter pour sauvegarder en BDD => $em->flush();
-
+            //! à décommenter pour sauvegarder en BDD => 
+            //!$em->flush();
             //remplissage des variables pour le message d'information d'état final
             $result = 'success';
             $message = "Le café {$coffeeName} a bien été supprimé";
         } catch (\Throwable $th) {
             //remplissage des variables pour le message d'information d'état final
-            $result = 'error';
+            $result = 'danger';
             $message = "Le café {$coffeeName} n'a pas pu être supprimé, veuillez contacter l'administrateur du site.";
         }
 

@@ -6,4 +6,10 @@
 
 <p>HOME</p>
 
+<hr>
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <p>Hello {{ app.user.firstname }} !</p>
+{% endif %}
+
 {% endblock %}
