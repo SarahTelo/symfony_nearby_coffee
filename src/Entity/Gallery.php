@@ -37,6 +37,11 @@ class Gallery
      */
     private $updated_at;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $way;
+
     public function __construct()
     {
         //Date par défaut
@@ -92,6 +97,18 @@ class Gallery
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getWay(): ?string
+    {
+        return $this->way;
+    }
+
+    public function setWay(?string $way): self
+    {
+        $this->way = $way;
 
         return $this;
     }

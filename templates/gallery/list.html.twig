@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Galerie photo{% endblock %}
+
+{% block body %}
+
+{% for image in gallery %}
+    <div class="card">
+        <a href="#">
+            <img class="card-img-top" src="{{ asset('/image/' ) }}{{image.way}}" alt="alternative '{{ image.slug }}'">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">{{ image.name }}</h5>
+        </div>
+    </div>
+{% endfor %}
+
+{# todo: changer coffee par gallery #}
+<hr>
+<a href="{{ path('coffee_new') }}">Ajouter une nouvelle image</a>
+
+{% endblock %}

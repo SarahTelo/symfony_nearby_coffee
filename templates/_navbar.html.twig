@@ -4,6 +4,8 @@
 <hr>
     <a href="{{ path('coffee_list') }}">Liste des cafés</a>
 <hr>
+    <a href="{{ path('gallery_list') }}">Galerie photo</a>
+<hr>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <a href="{{ path('user_detail', {id:app.user.id}) }}">Mon profil</a>
     {% endif %}
