@@ -11,11 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 use SluggerService;
 use App\Service\FileUploader;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * *Classe de gestion d'affichage des images
@@ -99,12 +97,12 @@ class GalleryController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "L'image {$galleryName} a bien été ajouté";
+                $message = "L'image {$galleryName} a bien été ajoutée";
                 $route = 'gallery_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "L'image {$galleryName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
+                $message = "L'image {$galleryName} n'a pas pu être ajoutée, veuillez contacter l'administrateur du site.";
                 $route = 'gallery_new';
                 $gallerySlug = null;
             }
@@ -174,11 +172,11 @@ class GalleryController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "L'image {$galleryName} a bien été modifié";
+                $message = "L'image {$galleryName} a bien été modifiée";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "L'image {$galleryName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+                $message = "L'image {$galleryName} n'a pas pu être modifiée, veuillez contacter l'administrateur du site.";
             }
 
             //remplissage du message d'information
@@ -193,5 +191,41 @@ class GalleryController extends AbstractController
                 'form_gallery_edit' => $form->createView(), 
                 'name' => $gallery->getName() ]); 
         }
+    }
+
+    /**
+     * *Suppression d'une image
+     * 
+     * @Route("/admin/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
+     * 
+     * @param gallery => (injection de dépendance)
+     * @return void
+     */
+    public function galleryDelete(gallery $gallery): Response
+    {
+        //stockage du nom d'une image pour le réutiliser
+        $galleryName = $gallery->getName();
+
+        try {
+            //appel de l'entity manager
+            $em = $this->getDoctrine()->getManager();
+            //sauvegarde
+            $em->remove($gallery);
+            //envoi à la BDD
+            //! à décommenter pour sauvegarder en BDD => 
+            //!$em->flush();
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'success';
+            $message = "L'image {$galleryName} a bien été supprimée";
+        } catch (\Throwable $th) {
+            //remplissage des variables pour le message d'information d'état final
+            $result = 'danger';
+            $message = "L'image {$galleryName} n'a pas pu être supprimée, veuillez contacter l'administrateur du site.";
+        }
+
+        //remplissage du message d'information
+        $this->addFlash($result, $message);
+        //redirection vers la route choisie
+        return $this->redirectToRoute('gallery_list');
     }
 }

@@ -15,8 +15,9 @@
         </a>
         <div class="card-body">
             <h5 class="card-title">{{ image.name }}</h5>
-            {# <button><a href="{{ path('gallery_edit', {slug:gallery.slug}) }}">Modifier</a></button> #}
-            {# <button><a href="{{ path('gallery_delete', {slug:gallery.slug}) }}">Supprimer</a></button> #}
+            <p>{{ image.description }}</p>
+            <button><a href="{{ path('gallery_edit', {slug:image.slug}) }}">Modifier</a></button>
+            <button><a href="{{ path('gallery_delete', {slug:image.slug}) }}">Supprimer</a></button>
         </div>
     </div>
 {% endfor %}

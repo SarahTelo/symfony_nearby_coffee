@@ -5,8 +5,12 @@ namespace App\Entity;
 use App\Repository\GalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
+ * @UniqueEntity("name", message="L'image existe déjà")
  */
 class Gallery
 {
@@ -18,7 +22,18 @@ class Gallery
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Length(
+     *      min=1, max=100,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
+     * @Assert\Type(type = "string")
+     * @Assert\Regex(
+     *      pattern = "[=%\$<>*+\}\{\\/\]\[;]",
+     *      match = true,
+     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;"
+     * )
      */
     private $name;
 
@@ -42,11 +57,16 @@ class Gallery
      */
     private $way;
 
-    public function __construct()
-    {
-        //Date par défaut
-        $this->created_at = new \DateTime();
-    }
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(
+     *      min=1, max=500,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
+     * @Assert\Type(type = "string")
+     */
+    private $description;
 
     public function getId(): ?int
     {
@@ -109,6 +129,18 @@ class Gallery
     public function setWay(?string $way): self
     {
         $this->way = $way;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

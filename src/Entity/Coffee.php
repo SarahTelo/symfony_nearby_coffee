@@ -38,8 +38,8 @@ class Coffee
      * @Assert\NotBlank(message="Champ obligatoire")
      * @Assert\Length(
      *      min=1, max=50,
-     *      minMessage = "Minimum 1 caractère",
-     *      maxMessage = "Maximum 50 caractères",
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
      * )
      */
     private $country;

@@ -6,6 +6,7 @@ use App\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -29,9 +30,13 @@ class GalleryType extends AbstractType
             'required' => true,
             'attr' => ['placeholder' => 'Saisir le nom de l\'image'],
         ])
+        ->add('description', TextareaType::class, [
+            'label' => 'Description de l\'image',
+            'required' => false,
+            'attr' => ['placeholder' => 'Saisir la description de l\'image'],
+        ])
         ->add('image', FileType::class, [
             'label' => 'Ajoutez l\'image',
-            // TODO : le placeholder avec le chemin du fichier quand on l'ajoute
             //mapped à false car l'image ne correspond pas à une propriété de l'entité
             'mapped' => false,
             //required à false afin de pouvoir éditer un image sans avoir à la télécharger à nouveau
