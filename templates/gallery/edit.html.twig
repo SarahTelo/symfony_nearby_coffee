@@ -9,7 +9,8 @@
     {{ form_row(form_gallery_edit.name) }}
     {{ form_row(form_gallery_edit.description) }}
     {# TODO : à corriger #}
-    {{ form_row(form_gallery_edit.image, {'attr': {'placeholder': 'templates/gallery/edit.html.twig'}}) }}
+    {# {{ form_row(form_gallery_edit.image, {'attr': {'placeholder': 'templates/gallery/edit.html.twig'}}) }} #}
+    {{ form_row(form_gallery_edit.image) }}
 {{ form_end(form_gallery_edit) }}
 
 {% endblock %}

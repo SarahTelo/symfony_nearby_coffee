@@ -90,8 +90,8 @@ class CoffeeController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $coffeeSlug = $slugger->slugify($coffeeName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $coffee->setSlug($coffeeSlug);
 
@@ -160,8 +160,8 @@ class CoffeeController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $coffeeSlug = $slugger->slugify($coffeeName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $coffee->setSlug($coffeeSlug);
 

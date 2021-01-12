@@ -23,16 +23,19 @@ class Gallery
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Type(type = "string")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      * @Assert\Length(
      *      min=1, max=100,
      *      minMessage = "Minimum {{ limit }} caractère",
      *      maxMessage = "Maximum {{ limit }} caractères",
      * )
-     * @Assert\Type(type = "string")
      * @Assert\Regex(
-     *      pattern = "[=%\$<>*+\}\{\\/\]\[;]",
-     *      match = true,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;"
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
+     *      match = false,
+     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
      * )
      */
     private $name;
@@ -59,12 +62,17 @@ class Gallery
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Type(type = "string")
      * @Assert\Length(
      *      min=1, max=500,
      *      minMessage = "Minimum {{ limit }} caractère",
      *      maxMessage = "Maximum {{ limit }} caractères",
      * )
-     * @Assert\Type(type = "string")
+     * @Assert\Regex(
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;]]",
+     *      match = false,
+     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;"
+     * )
      */
     private $description;
 
@@ -78,7 +86,7 @@ class Gallery
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 

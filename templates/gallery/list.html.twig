@@ -9,7 +9,8 @@
 <hr>
 
 {% for image in gallery %}
-    <div class="card">
+{# TODO : retirer le style dans le template et le mettre dans le style.css #}
+    <div class="card", style="width:18rem;">
         <a href="#">
             <img class="card-img-top" src="{{ asset('/images/' ) }}{{image.way}}" alt="alternative '{{ image.slug }}'">
         </a>
@@ -21,7 +22,5 @@
         </div>
     </div>
 {% endfor %}
-
-
 
 {% endblock %}

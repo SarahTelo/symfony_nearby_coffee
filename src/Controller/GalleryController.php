@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use SluggerService;
 use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Throwable;
 
 /**
  * *Classe de gestion d'affichage des images
@@ -71,8 +72,8 @@ class GalleryController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $gallerySlug = $slugger->slugify($galleryName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $gallerySlug = $slugger->slugify($galleryName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $gallery->setSlug($gallerySlug);
 
@@ -82,10 +83,12 @@ class GalleryController extends AbstractController
             /** @var UploadedFile $imageFile */
             //traitement de l'ajout du fichier de l'image
             $imageFile = $form->get('image')->getData();
-            //appel du service d'upload
-            $imageFileName = $fileUploader->upload($imageFile);
-            //ajout du chemin dans le champ "way" de la bdd
-            $gallery->setWay($imageFileName);
+            if ($imageFile) {
+                //appel du service d'upload
+                $imageFileName = $fileUploader->upload($imageFile);
+                //ajout du chemin dans le champ "way" de la bdd
+                $gallery->setWay($imageFileName);
+            }
 
             try {
                 //appel de l'entity manager
@@ -110,7 +113,7 @@ class GalleryController extends AbstractController
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute($route, ['slug' => $gallerySlug]);
+            return $this->redirectToRoute($route);
         }
         //-> sinon affichage du formulaire vide
         else
@@ -149,8 +152,8 @@ class GalleryController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $gallerySlug = $slugger->slugify($galleryName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $gallerySlug = $slugger->slugify($galleryName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $gallery->setSlug($gallerySlug);
 
@@ -182,7 +185,7 @@ class GalleryController extends AbstractController
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute('gallery_list', [ 'slug' => $gallery->getSlug() ]);
+            return $this->redirectToRoute('gallery_list');
         }
         //-> sinon affichage du formulaire avec les données de l'image à éditer
         else
@@ -213,7 +216,7 @@ class GalleryController extends AbstractController
             $em->remove($gallery);
             //envoi à la BDD
             //! à décommenter pour sauvegarder en BDD => 
-            //!$em->flush();
+            $em->flush();
             //remplissage des variables pour le message d'information d'état final
             $result = 'success';
             $message = "L'image {$galleryName} a bien été supprimée";

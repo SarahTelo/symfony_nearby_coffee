@@ -33,6 +33,7 @@ class GalleryType extends AbstractType
         ->add('description', TextareaType::class, [
             'label' => 'Description de l\'image',
             'required' => false,
+            'help' => 'maximum 500 caratères',
             'attr' => ['placeholder' => 'Saisir la description de l\'image'],
         ])
         ->add('image', FileType::class, [
@@ -46,11 +47,11 @@ class GalleryType extends AbstractType
                     'minWidth' => 200,
                     'minWidthMessage' => 'L\'image doit faire au minimum 200 pixels.',
                     'maxWidth' => 800,
-                    'maxWidthMessage' => 'L\'image ne doit pas dépasser 200 x 800 pixels.',
+                    'maxWidthMessage' => 'L\'image ne doit pas dépasser 800 pixels.',
                     'minHeight' => 200,
                     'minHeightMessage' => 'L\'image doit faire au minimum 200 pixels.',
                     'maxHeight' => 800,
-                    'maxHeightMessage' => 'L\'image ne doit pas dépasser 200 x 800 pixels.',
+                    'maxHeightMessage' => 'L\'image ne doit pas dépasser 800 pixels.',
                     'maxSize' => 1000000,
                     'maxSizeMessage' => 'L\'image ne doit pas dépasser 1 Mo (1000000 Ko).',
                 ]),
