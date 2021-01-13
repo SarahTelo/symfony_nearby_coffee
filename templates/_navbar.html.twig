@@ -1,24 +1,31 @@
 
 <nav>
-    <a href="{{ path('main_home') }}">Accueil</a>
+
+<a href="{{ path('main_home') }}">Accueil</a>
 <hr>
-    <a href="{{ path('coffee_list') }}">Liste des cafés</a>
+
+<a href="{{ path('coffee_list') }}">Liste des cafés</a>
 <hr>
-    <a href="{{ path('gallery_list') }}">Galerie photo</a>
+
+<a href="{{ path('gallery_list') }}">Galerie photo</a>
 <hr>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <a href="{{ path('user_detail', {id:app.user.id}) }}">Mon profil</a>
-    {% endif %}
-<hr>
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('user_list') }}">Liste des utilisateurs</a>
-    {% endif %}
-<hr>
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <a href="{{ path('user_detail', {id:app.user.id}) }}">Mon profil</a>
+    <hr>
+{% endif %}
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('user_list') }}">Liste des utilisateurs</a>
+    <hr>
+{% endif %}
+
+{#
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
     {% else %}
         <button><a href="{{ path('app_login') }}">connexion</a></button>
     {% endif %}
 <hr>
+#}
 
 </nav>

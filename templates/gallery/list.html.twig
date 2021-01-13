@@ -4,9 +4,10 @@
 
 {% block body %}
 
+{% if is_granted('ROLE_RESPONSIBLE') %}
+    <a href="{{ path('gallery_new') }}">Ajouter une nouvelle photo</a>
 <hr>
-<a href="{{ path('gallery_new') }}">Ajouter une nouvelle image</a>
-<hr>
+{% endif %}
 
 {% for image in gallery %}
 {# TODO : retirer le style dans le template et le mettre dans le style.css #}
@@ -17,8 +18,10 @@
         <div class="card-body">
             <h5 class="card-title">{{ image.name }}</h5>
             <p>{{ image.description }}</p>
-            <button><a href="{{ path('gallery_edit', {slug:image.slug}) }}">Modifier</a></button>
-            <button><a href="{{ path('gallery_delete', {slug:image.slug}) }}">Supprimer</a></button>
+            {% if is_granted('ROLE_RESPONSIBLE') %}
+                <button><a href="{{ path('gallery_edit', {slug:image.slug}) }}">Modifier</a></button>
+                <button><a href="{{ path('gallery_delete', {slug:image.slug}) }}">Supprimer</a></button>
+            {% endif %}
         </div>
     </div>
 {% endfor %}

@@ -11,7 +11,9 @@
         <li>Prix: {{ coffee.price }} €</li>
     </ul>
 
-<button><a href="{{ path('coffee_edit', {slug:coffee.slug}) }}">Modifier</a></button>
-<button><a href="{{ path('coffee_delete', {slug:coffee.slug}) }}">Supprimer</a></button>
+{% if is_granted('ROLE_RESPONSIBLE') %}
+    <button><a href="{{ path('coffee_edit', {slug:coffee.slug}) }}">Modifier</a></button>
+    <button><a href="{{ path('coffee_delete', {slug:coffee.slug}) }}">Supprimer</a></button>
+{% endif %}
 
 {% endblock %}

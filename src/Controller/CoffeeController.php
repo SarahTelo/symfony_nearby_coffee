@@ -147,6 +147,8 @@ class CoffeeController extends AbstractController
 
         //les données du café à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage de l'ancien nom du café
+        $oldName = $coffee->getName();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -172,7 +174,7 @@ class CoffeeController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "Le café {$coffeeName} a bien été modifié";
+                $message = "Le café {$oldName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';

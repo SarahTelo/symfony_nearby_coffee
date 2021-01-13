@@ -8,9 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//TODO : rajouter dans la regex: au moins un caractère alphabétique
+
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
- * @UniqueEntity("name", message="L'image existe déjà")
+ * @UniqueEntity("name", message="La photo existe déjà")
  */
 class Gallery
 {

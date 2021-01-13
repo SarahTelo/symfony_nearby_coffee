@@ -37,10 +37,42 @@ class FileUploader
             // ... handle exception if something happens during file upload
             //création d'une exception de type "fichier"
             //! TODO : arriver à l'exception: à traiter avec test unitaire?
-            dd('affichage de l\'excetpion, aller voir dans \'src\Service\FileUploader.php\': ', $e);
+            dd('affichage de l\'excetpion, aller voir dans \'src\Service\FileUploader.php\': UPLOAD : ', $e);
         }
 
         return $fileName;
+    }
+
+    // TODO : à rendre universelle pour la suppression des fichiers
+    /**
+     * *Suppression du fichier physique d'une photo
+     *
+     * @param string $fileName (propriété $way)
+     * @return boolean
+     */
+    public function deleteFileGallery (string $fileName) 
+    {
+        //récupérer le chemin du dossier de l'image
+        $path = $this->getTargetDirectory();
+        //création du chemin complet
+        $pathToRemove = $path . "/" . $fileName;
+
+        //TODO vérifier qu'il n'est pas un fichier système?
+        //TODO vérifier qu'il est bien dans le dossier public/images
+        
+        //effacement du fichier physique s'il existe et s'il est dans le dossier spécifique
+        if (file_exists($pathToRemove) && str_contains($path, '/public/images')) {
+            try {
+                //suppression du fichier
+                unlink($pathToRemove);
+            } catch (FileException $e) {
+                //! TODO : arriver à l'exception: à traiter avec test unitaire?
+                dd('affichage de l\'excetpion, aller voir dans \'src\Service\FileUploader.php\': DELETE : ', $e);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getTargetDirectory()

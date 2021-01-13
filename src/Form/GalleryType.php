@@ -46,11 +46,12 @@ class GalleryType extends AbstractType
                 new Image ([
                     'minWidth' => 200,
                     'minWidthMessage' => 'L\'image doit faire au minimum 200 pixels.',
-                    'maxWidth' => 800,
+                    // TODO corriger la taille
+                    'maxWidth' => 1000800,
                     'maxWidthMessage' => 'L\'image ne doit pas dépasser 800 pixels.',
                     'minHeight' => 200,
                     'minHeightMessage' => 'L\'image doit faire au minimum 200 pixels.',
-                    'maxHeight' => 800,
+                    'maxHeight' => 1000800,
                     'maxHeightMessage' => 'L\'image ne doit pas dépasser 800 pixels.',
                     'maxSize' => 1000000,
                     'maxSizeMessage' => 'L\'image ne doit pas dépasser 1 Mo (1000000 Ko).',

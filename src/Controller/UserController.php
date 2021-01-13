@@ -178,6 +178,8 @@ class UserController extends AbstractController
         $user = $repository->find($id);
         //les données du utilisateur à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage de l'ancien nom
+        $oldName = $user->getFirstname() . $user->getLastname();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -213,11 +215,11 @@ class UserController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "Le utilisateur {$userFullName} a bien été modifié";
+                $message = "Le utilisateur {$oldName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+                $message = "Le utilisateur {$oldName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
             }
 
             //remplissage du message d'information

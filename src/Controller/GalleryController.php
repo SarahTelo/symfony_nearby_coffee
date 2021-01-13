@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use SluggerService;
 use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Throwable;
 
 /**
  * *Classe de gestion d'affichage des images
@@ -100,7 +99,7 @@ class GalleryController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "L'image {$galleryName} a bien été ajoutée";
+                $message = "L'image {$galleryName} a bien été ajoutée.";
                 $route = 'gallery_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
@@ -139,6 +138,8 @@ class GalleryController extends AbstractController
 
         //les données de l'image à éditer sont injectées dans le "formulaire" créé
         $form = $this->createForm(GalleryType::class, $gallery, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage de l'ancien nom
+        $oldName = $gallery->getName();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -175,7 +176,7 @@ class GalleryController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "L'image {$galleryName} a bien été modifiée";
+                $message = "L'image {$galleryName} a bien été modifiée.";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
@@ -204,10 +205,12 @@ class GalleryController extends AbstractController
      * @param gallery => (injection de dépendance)
      * @return void
      */
-    public function galleryDelete(gallery $gallery): Response
+    public function galleryDelete(gallery $gallery, FileUploader $fileUploader): Response
     {
         //stockage du nom d'une image pour le réutiliser
         $galleryName = $gallery->getName();
+        //stockage du nom physique de l'une image pour le réutiliser
+        $galleryWay = $gallery->getWay();
 
         try {
             //appel de l'entity manager
@@ -217,11 +220,18 @@ class GalleryController extends AbstractController
             //envoi à la BDD
             //! à décommenter pour sauvegarder en BDD => 
             $em->flush();
-            //remplissage des variables pour le message d'information d'état final
-            $result = 'success';
-            $message = "L'image {$galleryName} a bien été supprimée";
+            //remplissage des variables pour le message d'information d'état final 
+            //en fonction du bon déroulement de la suppression du fichier physique de la photo
+            if ($fileUploader->deleteFileGallery($galleryWay)) {
+                $result = 'success';
+                $message = "L'image {$galleryName} a bien été supprimée.";
+            } else {
+                $result = 'danger';
+                $message = "L'image {$galleryName} a bien été supprimée mais le fichier physique {$galleryWay} existe toujours.";
+            }
         } catch (\Throwable $th) {
             //remplissage des variables pour le message d'information d'état final
+            dd($th);
             $result = 'danger';
             $message = "L'image {$galleryName} n'a pas pu être supprimée, veuillez contacter l'administrateur du site.";
         }

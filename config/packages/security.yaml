@@ -43,7 +43,7 @@ security:
         - { path: ^/admin/user/\d+/detail, roles: ROLE_RESPONSIBLE }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/coffee/admin, roles: ROLE_RESPONSIBLE }
-        # - { path: ^/gallery/admin, roles: ROLE_RESPONSIBLE }
+        - { path: ^/gallery/admin, roles: ROLE_RESPONSIBLE }
         # - { path: ^/roasting/admin, roles: ROLE_RESPONSIBLE }
         # - { path: ^/profile, roles: ROLE_USER }
     
