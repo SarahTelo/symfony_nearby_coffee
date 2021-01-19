@@ -95,7 +95,6 @@ class GalleryController extends AbstractController
                 //sauvegarde
                 $em->persist($gallery);
                 //envoi à la BDD
-                //! à décommenter pour sauvegarder en BDD
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
@@ -142,7 +141,6 @@ class GalleryController extends AbstractController
         $oldName = $gallery->getName();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
-        dd($request);
 
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
@@ -219,16 +217,21 @@ class GalleryController extends AbstractController
             //sauvegarde
             $em->remove($gallery);
             //envoi à la BDD
-            //! à décommenter pour sauvegarder en BDD => 
             $em->flush();
-            //remplissage des variables pour le message d'information d'état final 
-            //en fonction du bon déroulement de la suppression du fichier physique de la photo
-            if ($fileUploader->deleteFileGallery($galleryWay)) {
+            //vérifier si le nom de la photo est reliée à un fichier physique
+            if($galleryWay === null) {
                 $result = 'success';
                 $message = "L'image {$galleryName} a bien été supprimée.";
             } else {
-                $result = 'danger';
-                $message = "L'image {$galleryName} a bien été supprimée mais le fichier physique {$galleryWay} existe toujours.";
+                //remplissage des variables pour le message d'information d'état final 
+                //en fonction du bon déroulement de la suppression du fichier physique de la photo
+                if ($fileUploader->deleteFileGallery($galleryWay)) {
+                    $result = 'success';
+                    $message = "L'image {$galleryName} a bien été supprimée.";
+                } else {
+                    $result = 'danger';
+                    $message = "L'image {$galleryName} a bien été supprimée mais le fichier physique {$galleryWay} existe toujours.";
+                }
             }
         } catch (\Throwable $th) {
             //remplissage des variables pour le message d'information d'état final

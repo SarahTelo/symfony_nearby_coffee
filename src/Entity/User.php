@@ -76,7 +76,7 @@ class User implements UserInterface
      * @Assert\Regex(
      *      pattern = "[0-9]",
      *      match = false,
-     *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
+     *      message = "Le nom ne doit pas contenir de chiffres ou de nombres."
      * )
      */
     private $lastname;
