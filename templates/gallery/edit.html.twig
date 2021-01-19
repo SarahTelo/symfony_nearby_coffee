@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Modifier {{ name }}{% endblock %}
+
+{% block body %}
+
+{{ form_start(form_gallery_edit) }}
+    {{ form_row(form_gallery_edit.name) }}
+    {{ form_row(form_gallery_edit.description) }}
+    {# TODO : le placeholder avec le chemin du fichier quand on l'ajoute #}
+    {# {{ form_row(form_gallery_edit.image, {'attr': {'placeholder': 'templates/gallery/edit.html.twig'}}) }} #}
+    {{ form_row(form_gallery_edit.image) }}
+{{ form_end(form_gallery_edit) }}
+
+<hr>
+<a href="{{ path('gallery_list') }}">Retour à la galerie photo</a>
+
+{% endblock %}

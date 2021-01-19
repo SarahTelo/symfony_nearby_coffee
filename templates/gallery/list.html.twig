@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Galerie photo{% endblock %}
+
+{% block body %}
+
+{% if is_granted('ROLE_RESPONSIBLE') %}
+    <a href="{{ path('gallery_new') }}">Ajouter une nouvelle photo</a>
+<hr>
+{% endif %}
+
+{% for image in gallery %}
+    <div class="card", style="width:18rem;">
+        <a href="#">
+            <img class="card-img-top" src="{{ asset('/images/' ) }}{{image.way}}" alt="alternative '{{ image.slug }}'">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">{{ image.name }}</h5>
+            <p>{{ image.description }}</p>
+            {% if is_granted('ROLE_RESPONSIBLE') %}
+                <button><a href="{{ path('gallery_edit', {slug:image.slug}) }}">Modifier</a></button>
+                <button><a href="{{ path('gallery_delete', {slug:image.slug}) }}">Supprimer</a></button>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

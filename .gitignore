@@ -16,3 +16,7 @@
 ###< symfony/phpunit-bridge ###
 
 /zInfos/
+/public/images/
+/src/Service/UploaderHelper.php
+/templates/user/edit1.html.twig
+/templates/user/edit2.html.twig

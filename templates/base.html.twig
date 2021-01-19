@@ -9,9 +9,30 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+
+{# TODO : retirer le style dans TOUS les templates et les mettre dans le style.css #}
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <p style="text-align: center;">Hello {{ app.user.firstname }} !</p>
+        {% endif %}
+
+        <div style="text-align: end;">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
+            {% else %}
+                <button><a href="{{ path('app_login') }}">connexion</a></button>
+            {% endif %}
+        </div>
+        <hr>
+
         {% include '_navbar.html.twig' %}
+
         {% include '_flash.html.twig' %}
+
         {% block body %}{% endblock %}
+
+        {% include '_footer.html.twig' %}
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>

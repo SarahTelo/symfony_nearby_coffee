@@ -1,0 +1,9 @@
+
+<footer style="text-align: end;">
+    <hr>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
+    {% else %}
+        <button><a href="{{ path('app_login') }}">connexion</a></button>
+    {% endif %}
+</footer>

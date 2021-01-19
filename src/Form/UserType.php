@@ -37,8 +37,8 @@ class UserType extends AbstractType
             'attr' => ['placeholder' => 'Saisir le nom'],
         ])
         ->add('email', EmailType::class, [
+            'help' => 'champ obligatoire',
             'attr' => ['placeholder' => 'Saisir l\'email'],
-            'help' => 'choix obligatoire',
         ])
         //!->add('status', TextType::class, [ 'label' => '??' ])
         //ChoiceType: choix multiple
@@ -48,7 +48,7 @@ class UserType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'required' => true,
-            'help' => 'choix obligatoire',
+            'help' => 'champ obligatoire',
             'choices' => [
                 'Responsable'    => 'ROLE_RESPONSIBLE', 
                 'Administrateur' => 'ROLE_ADMIN',
@@ -59,7 +59,7 @@ class UserType extends AbstractType
             'invalid_message' => 'Les mots passent doivent être identiques.',
             'required' => true,
             'first_options'  => [
-                'label' => 'Saisissez votre mot de passe', 
+                'label' => 'Saisissez votre mot de passe',
                 'help'  => 'Minimum 8 caractères dont 1 majuscule, 1 minuscule et 1 chiffre'],
             'second_options' => [
                 'label' => 'Saisir à nouveau votre mot de passe'],

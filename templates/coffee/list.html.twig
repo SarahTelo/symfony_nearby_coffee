@@ -4,6 +4,11 @@
 
 {% block body %}
 
+{% if is_granted('ROLE_RESPONSIBLE') %}
+    <a href="{{ path('coffee_new') }}">Ajouter un nouveau café</a>
+<hr>
+{% endif %}
+
 {# TODO : Trier par nom et par torréfaction #}
 <table>
     <th class="classify">Nom</th>
@@ -15,8 +20,5 @@
             </tr>
         {% endfor %}
 </table>
-
-<hr>
-<a href="{{ path('coffee_new') }}">Ajouter un nouveau café</a>
 
 {% endblock %}

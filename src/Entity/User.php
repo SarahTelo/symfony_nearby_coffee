@@ -50,8 +50,7 @@ class User implements UserInterface
      *      message = "Votre mot de passe doit contenir au moins 8 caractères dont 1 majuscule, 1 minuscule et 1 chiffre"
      * )
      * @Assert\Length(
-     *      min = 3,
-     *      max = 255,
+     *      min = 3, max = 255,
      *      minMessage = "Minimum {{ limit }} caractères.",
      *      maxMessage = "Maximum {{ limit }} caractères."
      * )
@@ -61,6 +60,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Type(type = "string")
      * @Assert\Regex(
      *      pattern = "[0-9]",
      *      match = false,
@@ -72,6 +72,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Type(type = "string")
      * @Assert\Regex(
      *      pattern = "[0-9]",
      *      match = false,

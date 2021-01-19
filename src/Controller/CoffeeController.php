@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+//use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use SluggerService;
 //use DateTime;
@@ -90,8 +90,8 @@ class CoffeeController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $coffeeSlug = $slugger->slugify($coffeeName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $coffee->setSlug($coffeeSlug);
 
@@ -147,6 +147,8 @@ class CoffeeController extends AbstractController
 
         //les données du café à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage de l'ancien nom du café
+        $oldName = $coffee->getName();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
@@ -160,8 +162,8 @@ class CoffeeController extends AbstractController
 
             //instancier le service
             $slugger = new SluggerService();
-            //appel de la fonction du service
-            $coffeeSlug = $slugger->slugify($coffeeName);
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
             $coffee->setSlug($coffeeSlug);
 
@@ -172,7 +174,7 @@ class CoffeeController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "Le café {$coffeeName} a bien été modifié";
+                $message = "Le café {$oldName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';

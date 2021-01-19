@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une image{% endblock %}
+
+{% block body %}
+
+{# TODO : le placeholder avec le chemin du fichier quand on l'ajoute #}
+{{ form_start(form_gallery) }}
+{{ form_end(form_gallery) }}
+
+<hr>
+<a href="{{ path('gallery_list') }}">Retour à la galerie photo</a>
+
+{% endblock %}

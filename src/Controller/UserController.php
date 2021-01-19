@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
-
+//use App\Service\ContentRename as ServiceContentRename;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+use App\Service\ContentRename;
 
 //TODO : mettre un autre token dans les autres routes
 //TODO : comprendre la redirection automatique
@@ -75,18 +76,9 @@ class UserController extends AbstractController
         $user = $repository->find($id);
         
         //réécriture des rôles
-        //TODO : à factoriser
         $arrayRoles = $user->getRoles();
-        $arrayRolesModify = [];
-        foreach ($arrayRoles as $value) {
-            if ($value == 'ROLE_ADMIN') {
-                $arrayRolesModify[] = 'Administrateur';
-            } elseif ($value == 'ROLE_RESPONSIBLE') {
-                $arrayRolesModify[] = 'Responsable';
-            } else {
-                continue;
-            }
-        }
+        $contentRename = new ContentRename;
+        $arrayRolesModify = $contentRename->renamedRoles($arrayRoles);
 
         return $this->render('user/detail.html.twig', [
             'user' => $user,
@@ -165,6 +157,7 @@ class UserController extends AbstractController
      * 
      * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
+     * @param int $id
      * @param request $request
      * @return void
      */
@@ -178,33 +171,20 @@ class UserController extends AbstractController
         $user = $repository->find($id);
         //les données du utilisateur à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage de l'ancien nom
+        $oldName = $user->getFirstname() . " " . $user->getLastname();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
+        //TODO : à debug
+        
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
         {
             //date de mise à jour
             $user->setUpdatedAt( new \DateTime('now') );
             //stockage du nom de l'utilisateur pour le réutiliser
-            $userFullName = $user->getFirstname() . " " . $user->getLastname();
-
-
-            //TODO : réécriture des rôles
-            $arrayRoles = $user->getRoles();
-            $arrayRolesModify = [];
-            foreach ($arrayRoles as $value) {
-                if ($value == 'ROLE_ADMIN') {
-                    $arrayRolesModify[] = 'Administrateur';
-                } elseif ($value == 'ROLE_RESPONSIBLE') {
-                    $arrayRolesModify[] = 'Responsable';
-                } else {
-                    continue;
-                }
-            }
-            $roles1 = implode(", ", $arrayRolesModify);
-            $user->setStatus($roles1);
-            //TODO : à revérifier
+            //$userFullName = $user->getFirstname() . " " . $user->getLastname();
 
             try {
                 //appel de l'entity manager
@@ -213,11 +193,11 @@ class UserController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "Le utilisateur {$userFullName} a bien été modifié";
+                $message = "Le utilisateur {$oldName} a bien été modifié";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+                $message = "Le utilisateur {$oldName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
             }
 
             //remplissage du message d'information
@@ -233,6 +213,64 @@ class UserController extends AbstractController
                 'name' => $user->getFirstname() . " " . $user->getLastname(), 
                 'userDetailId' => $user->getId() ]); 
         }
+    }
+    /**
+     * *Edition du mot de passe
+     * 
+     * @Route("/{id}/edit/password", name="_edit_password", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * 
+     * @param int $id
+     * @param request $request
+     * @return void
+     */
+    public function userEditPassword(Request $request, int $id): Response
+    {
+        //TODO : faire le template
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //méthode POST utilisée (plus rapide)
+        /** @var UserRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+        //TODO : modifier "UserType" lorsque "UserTypePassword" sera créé
+        $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage des données du formulaire dans la request
+        $form->handleRequest($request);
+
+        //stockage de l'ancien nom
+        $userFullName = $user->getFirstname() . " " . $user->getLastname();
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            //date de mise à jour
+            $user->setUpdatedAt( new \DateTime('now') );
+
+            try {
+                //appel de l'entity manager
+                $em = $this->getDoctrine()->getManager();
+                //sauvegarde
+                $em->persist($user);
+                //envoi à la BDD
+                $em->flush();
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'success';
+                $message = "Le utilisateur {$userFullName} a bien été modifié";
+            } catch (\Throwable $th) {
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'danger';
+                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+            }
+            
+            //remplissage du message d'information
+            $this->addFlash($result, $message);
+            //redirection vers la route choisie
+            return $this->redirectToRoute('user_detail', [ 'id' => $user->getId() ]);
+        }
+        else
+        {
+            return $this->render('user/editPassword.html.twig', [ 'form_user_edit_password' => $form->createView(), ] );
+        }
+
     }
 
     /**
