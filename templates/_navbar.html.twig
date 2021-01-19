@@ -7,6 +7,11 @@
 <a href="{{ path('coffee_list') }}">Liste des cafés</a>
 <hr>
 
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <a href="{{ path('roasting_list') }}">Liste des torréfactions</a>
+    <hr>
+{% endif %}
+
 <a href="{{ path('gallery_list') }}">Galerie photo</a>
 <hr>
 

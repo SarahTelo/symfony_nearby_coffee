@@ -19,6 +19,23 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  */
 class RoastingType extends AbstractType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    {
+        //les token csrf sont implémentés de base
+        $builder
+        //ajout des caractéristiques du champ
+        ->add('name', TextType::class, [
+            'label' => 'Nom de la torréfaction',
+            'help' => 'champ obligatoire',
+            'required' => true,
+            'attr' => ['placeholder' => 'Saisir le nom de la nouvelle torréfaction'],
+        ])
+        ->add('save', SubmitType::class, [
+            'label' => 'sauvegarder',
+        ])
+        ;
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une torréfaction{% endblock %}
+
+{% block body %}
+
+{{ form_start(form_roasting) }}
+{{ form_end(form_roasting) }}
+
+<hr>
+<a href="{{ path('roasting_list') }}">Retour à la liste des torréfactions</a>
+
+{% endblock %}
