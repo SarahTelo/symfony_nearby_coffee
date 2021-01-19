@@ -141,7 +141,7 @@ class CoffeeController extends AbstractController
      */
     public function coffeeEdit(Request $request, coffee $coffee): Response
     {
-        //le café à supprimer a été trouvé par l'injection de dépendance: "coffee $coffee"
+        //le café à éditer a été trouvé par l'injection de dépendance: "coffee $coffee"
         //il n'est pas nécessaire d'appeler le repository
         //méthode POST utilisée (plus rapide)
 

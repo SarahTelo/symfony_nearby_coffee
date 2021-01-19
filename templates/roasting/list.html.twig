@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Liste des torréfaction{% endblock %}
+
+{% block body %}
+
+<a href="{{ path('roasting_new') }}">Ajouter une nouvelle torréfaction</a>
+<hr>
+
+<table>
+    <th class="classify">Nom</th>
+        {% for roasting in roastings %}
+            <tr>
+                <td><a class= "roasting_list-item" href="{{ path('roasting_detail', {id:roasting.id}) }}">{{ roasting.name }}</a></td>
+                {# <td>{{ roasting.coffee.name }}</td> #}
+            </tr>
+        {% endfor %}
+</table>
+
+{% endblock %}

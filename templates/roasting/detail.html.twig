@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - {{ roasting.name }}{% endblock %}
+
+{% block body %}
+
+    <p>{{ roasting.name }}</p>
+
+{% if is_granted('ROLE_RESPONSIBLE') %}
+    <button><a href="{{ path('roasting_edit', {id:roasting.id}) }}">Modifier</a></button>
+    <button><a href="{{ path('roasting_delete', {id:roasting.id}) }}">Supprimer</a></button>
+{% endif %}
+
+<hr>
+<a href="{{ path('roasting_list') }}">Retour à la liste des torréfactions</a>
+
+{% endblock %}
