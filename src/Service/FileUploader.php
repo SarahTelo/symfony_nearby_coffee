@@ -58,7 +58,6 @@ class FileUploader
         $pathToRemove = $path . "/" . $fileName;
 
         //TODO vérifier qu'il n'est pas un fichier système?
-        //TODO vérifier qu'il est bien dans le dossier public/images
         
         //effacement du fichier physique s'il existe et s'il est dans le dossier spécifique
         if (file_exists($pathToRemove) && str_contains($path, '/public/images')) {

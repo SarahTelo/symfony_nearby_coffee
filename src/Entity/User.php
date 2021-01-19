@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-//todo mettre à "true" le "match" de firstname et lastname (pour activer la regex)
+//todo mettre à "false" le "match" de firstname et lastname (pour activer la regex)
 //todo mettre à 8 le "min" de "length" du password
 
 /**
@@ -60,22 +60,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Regex(
-     *      pattern = "[[0-9]]",
-     *      match = false,
-     *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
-     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Regex(
-     *      pattern = "[[0-9]]",
-     *      match = false,
-     *      message = "Le nom ne doit pas contenir de chiffres ou de nombres."
-     * )
      */
     private $lastname;
 

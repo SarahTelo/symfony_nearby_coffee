@@ -8,8 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-//TODO : rajouter dans la regex: au moins un caractère alphabétique
-
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
  * @UniqueEntity("name", message="La photo existe déjà")
@@ -38,6 +36,11 @@ class Gallery
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
      *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $name;
@@ -74,6 +77,11 @@ class Gallery
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;]]",
      *      match = false,
      *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $description;

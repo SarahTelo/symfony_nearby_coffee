@@ -38,7 +38,7 @@ class UserType extends AbstractType
         ])
         ->add('email', EmailType::class, [
             'attr' => ['placeholder' => 'Saisir l\'email'],
-            'help' => 'choix obligatoire',
+            'help' => 'champ obligatoire',
         ])
         //!->add('status', TextType::class, [ 'label' => '??' ])
         //ChoiceType: choix multiple

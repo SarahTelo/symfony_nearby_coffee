@@ -6,13 +6,15 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
-
+//use App\Service\ContentRename as ServiceContentRename;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+use App\Service\ContentRename;
 
 //TODO : mettre un autre token dans les autres routes
 //TODO : comprendre la redirection automatique
@@ -75,18 +77,9 @@ class UserController extends AbstractController
         $user = $repository->find($id);
         
         //réécriture des rôles
-        //TODO : à factoriser
         $arrayRoles = $user->getRoles();
-        $arrayRolesModify = [];
-        foreach ($arrayRoles as $value) {
-            if ($value == 'ROLE_ADMIN') {
-                $arrayRolesModify[] = 'Administrateur';
-            } elseif ($value == 'ROLE_RESPONSIBLE') {
-                $arrayRolesModify[] = 'Responsable';
-            } else {
-                continue;
-            }
-        }
+        $contentRename = new ContentRename;
+        $arrayRolesModify = $contentRename->renamedRoles($arrayRoles);
 
         return $this->render('user/detail.html.twig', [
             'user' => $user,
@@ -165,6 +158,7 @@ class UserController extends AbstractController
      * 
      * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
+     * @param int $id
      * @param request $request
      * @return void
      */
@@ -179,34 +173,29 @@ class UserController extends AbstractController
         //les données du utilisateur à éditer sont injecté dans le "formulaire" créé
         $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage de l'ancien nom
-        $oldName = $user->getFirstname() . $user->getLastname();
+        $oldName = $user->getFirstname() . " " . $user->getLastname();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
+        //dd($form->getData());
+        //dump($request);
+        //dd($form->handleRequest($request));
+        
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
         {
+            dd("ok");
+            //dd($form->getData());
             //date de mise à jour
             $user->setUpdatedAt( new \DateTime('now') );
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
 
-
-            //TODO : réécriture des rôles
-            $arrayRoles = $user->getRoles();
-            $arrayRolesModify = [];
-            foreach ($arrayRoles as $value) {
-                if ($value == 'ROLE_ADMIN') {
-                    $arrayRolesModify[] = 'Administrateur';
-                } elseif ($value == 'ROLE_RESPONSIBLE') {
-                    $arrayRolesModify[] = 'Responsable';
-                } else {
-                    continue;
-                }
-            }
-            $roles1 = implode(", ", $arrayRolesModify);
-            $user->setStatus($roles1);
-            //TODO : à revérifier
+            //$arrayRoles = $user->getRoles();
+            //$contentRename = new ContentRename;
+            //$arrayRolesModify = $contentRename->renamedRoles($arrayRoles);
+            //$userRoles = implode(", ", $arrayRolesModify);
+            //$user->setStatus($userRoles);
 
             try {
                 //appel de l'entity manager
@@ -235,6 +224,21 @@ class UserController extends AbstractController
                 'name' => $user->getFirstname() . " " . $user->getLastname(), 
                 'userDetailId' => $user->getId() ]); 
         }
+    }
+    /**
+     * *Edition du mot de passe
+     * 
+     * @Route("/{id}/edit/password", name="_edit_password", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * 
+     * @param int $id
+     * @param request $request
+     * @return void
+     */
+    public function userEditPassword(Request $request, int $id): Response
+    {
+        //TODO : à faire
+        return $this->render('user/editPassword.html.twig', [] );
+
     }
 
     /**

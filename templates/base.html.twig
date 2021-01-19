@@ -10,6 +10,7 @@
     </head>
     <body>
 
+{# TODO : retirer le style dans TOUS les templates et les mettre dans le style.css #}
 
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <p style="text-align: center;">Hello {{ app.user.firstname }} !</p>
