@@ -60,12 +60,24 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Type(type = "string")
+     * @Assert\Regex(
+     *      pattern = "[0-9]",
+     *      match = false,
+     *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Type(type = "string")
+     * @Assert\Regex(
+     *      pattern = "[0-9]",
+     *      match = false,
+     *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
+     * )
      */
     private $lastname;
 

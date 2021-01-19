@@ -142,6 +142,7 @@ class GalleryController extends AbstractController
         $oldName = $gallery->getName();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
+        dd($request);
 
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
@@ -176,11 +177,11 @@ class GalleryController extends AbstractController
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "L'image {$galleryName} a bien été modifiée.";
+                $message = "L'image {$oldName} a bien été modifiée.";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "L'image {$galleryName} n'a pas pu être modifiée, veuillez contacter l'administrateur du site.";
+                $message = "L'image {$oldName} n'a pas pu être modifiée, veuillez contacter l'administrateur du site.";
             }
 
             //remplissage du message d'information

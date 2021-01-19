@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
 //use App\Service\ContentRename as ServiceContentRename;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -177,25 +176,15 @@ class UserController extends AbstractController
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
 
-        //dd($form->getData());
-        //dump($request);
-        //dd($form->handleRequest($request));
+        //TODO : à debug
         
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
         {
-            dd("ok");
-            //dd($form->getData());
             //date de mise à jour
             $user->setUpdatedAt( new \DateTime('now') );
             //stockage du nom de l'utilisateur pour le réutiliser
-            $userFullName = $user->getFirstname() . " " . $user->getLastname();
-
-            //$arrayRoles = $user->getRoles();
-            //$contentRename = new ContentRename;
-            //$arrayRolesModify = $contentRename->renamedRoles($arrayRoles);
-            //$userRoles = implode(", ", $arrayRolesModify);
-            //$user->setStatus($userRoles);
+            //$userFullName = $user->getFirstname() . " " . $user->getLastname();
 
             try {
                 //appel de l'entity manager
@@ -236,8 +225,51 @@ class UserController extends AbstractController
      */
     public function userEditPassword(Request $request, int $id): Response
     {
-        //TODO : à faire
-        return $this->render('user/editPassword.html.twig', [] );
+        //TODO : faire le template
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //méthode POST utilisée (plus rapide)
+        /** @var UserRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+        //TODO : modifier "UserType" lorsque "UserTypePassword" sera créé
+        $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //stockage des données du formulaire dans la request
+        $form->handleRequest($request);
+
+        //stockage de l'ancien nom
+        $userFullName = $user->getFirstname() . " " . $user->getLastname();
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            //date de mise à jour
+            $user->setUpdatedAt( new \DateTime('now') );
+
+            try {
+                //appel de l'entity manager
+                $em = $this->getDoctrine()->getManager();
+                //sauvegarde
+                $em->persist($user);
+                //envoi à la BDD
+                $em->flush();
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'success';
+                $message = "Le utilisateur {$userFullName} a bien été modifié";
+            } catch (\Throwable $th) {
+                //remplissage des variables pour le message d'information d'état final
+                $result = 'danger';
+                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+            }
+            
+            //remplissage du message d'information
+            $this->addFlash($result, $message);
+            //redirection vers la route choisie
+            return $this->redirectToRoute('user_detail', [ 'id' => $user->getId() ]);
+        }
+        else
+        {
+            return $this->render('user/editPassword.html.twig', [ 'form_user_edit_password' => $form->createView(), ] );
+        }
 
     }
 
