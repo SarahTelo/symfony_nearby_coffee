@@ -7,8 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity(repositoryClass=RoastingRepository::class)
+ * @UniqueEntity("name", message="La torréfcation existe déjà")
  */
 class Roasting
 {
@@ -20,8 +24,26 @@ class Roasting
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * 
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Type(type = "string")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
+     * @Assert\Length(
+     *      min=1, max=100,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
+     *      match = false,
+     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     * )
      */
     private $name;
 

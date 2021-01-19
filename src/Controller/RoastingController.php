@@ -11,10 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-use SluggerService;
-
 /**
- * *Classe de gestion d'affichage des torréfactions
+ * *Classe de gestion d'affichage des torréfactions disponible seulement aux utilisateurs authentifiés
  * 
  * @Route("/roasting", name="roasting")
  */
@@ -45,7 +43,7 @@ class RoastingController extends AbstractController
      * 
      * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
      * 
-     * @param roasting => (injection de dépendance)
+     * @param int $id
      * @return void
      */
     public function roastingDetail(Roasting $roasting): Response
@@ -117,8 +115,8 @@ class RoastingController extends AbstractController
      * 
      * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
-     * @param request $request
      * @param int $id
+     * @param request $request
      * @return void
      */
     public function roastingEdit(Request $request, int $id): Response
