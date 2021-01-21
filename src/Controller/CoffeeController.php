@@ -136,7 +136,7 @@ class CoffeeController extends AbstractController
         //il n'est pas nécessaire d'appeler le repository
         //méthode POST utilisée (plus rapide)
 
-        //les données du café à éditer sont injecté dans le "formulaire" créé
+        //les données du café à éditer sont injectées dans le "formulaire" créé
         $form = $this->createForm(CoffeeType::class, $coffee, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage de l'ancien nom du café
         $oldName = $coffee->getName();
@@ -196,6 +196,9 @@ class CoffeeController extends AbstractController
      */
     public function coffeeDelete(coffee $coffee): Response
     {
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         //stockage du nom du café pour le réutiliser
         $coffeeName = $coffee->getName();
 

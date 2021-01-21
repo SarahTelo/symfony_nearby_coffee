@@ -3,16 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Roasting;
-use App\Entity\Coffee;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\FloatType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 /**
  * Formulaire pour ajouter une torréfaction
@@ -29,6 +26,12 @@ class RoastingType extends AbstractType
             'help' => 'champ obligatoire',
             'required' => true,
             'attr' => ['placeholder' => 'Saisir le nom de la nouvelle torréfaction'],
+        ])
+        ->add('description', TextareaType::class, [
+            'label' => 'Description de la torrécation',
+            'required' => false,
+            'help' => 'maximum 500 caratères',
+            'attr' => ['placeholder' => 'Saisir la description de la torréfaction'],
         ])
         ->add('save', SubmitType::class, [
             'label' => 'sauvegarder',

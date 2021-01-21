@@ -38,6 +38,23 @@ class CoffeeRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * *Recherche de tous les cafés pour chaque torréfaction
+     *
+     * @param integer $roastingId
+     * @return void
+     */
+    public function findAllByRoastingId(int $roastingId) 
+    {
+        //SELECT * FROM coffee WHERE roasting_id = 1
+        $queryBuilder = $this->createQueryBuilder('coffees');
+        //propriété de l'entité "coffee": "roasting"
+        //stockage de la réponse
+        $query = $queryBuilder->where("coffees.roasting = $roastingId")->getQuery();
+        //envoi des résultats
+        return $query->getResult(); 
+    }
+
 
     // /**
     //  * @return Coffee[] Returns an array of Coffee objects

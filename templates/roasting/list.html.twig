@@ -14,7 +14,6 @@
         {% for roasting in roastings %}
             <tr>
                 <td><a class= "roasting_list-item" href="{{ path('roasting_detail', {id:roasting.id}) }}">{{ roasting.name }}</a></td>
-                {# <td>{{ roasting.coffee.name }}</td> #}
             </tr>
         {% endfor %}
 </table>

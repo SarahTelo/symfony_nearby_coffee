@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=RoastingRepository::class)
- * @UniqueEntity("name", message="La torréfcation existe déjà")
+ * @UniqueEntity("name", message="La torréfcation existe déjà.")
  */
 class Roasting
 {
@@ -30,19 +30,19 @@ class Roasting
      *      message="Champ obligatoire."
      * )
      * @Assert\Length(
-     *      min=1, max=100,
+     *      min=1, max=200,
      *      minMessage = "Minimum {{ limit }} caractère",
      *      maxMessage = "Maximum {{ limit }} caractères",
      * )
      * @Assert\Regex(
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     *      message = "Le nom de la torréfaction ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
      *      pattern = "[[a-zA-Z]]",
      *      match = true,
-     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     *      message = "Le nom de la torréfaction doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $name;
@@ -61,6 +61,27 @@ class Roasting
      * @ORM\OneToMany(targetEntity=Coffee::class, mappedBy="roasting")
      */
     private $coffees;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Type(type = "string")
+     * @Assert\Length(
+     *      min=1, max=500,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;]]",
+     *      match = false,
+     *      message = "La description ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ;"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "La description doit contenir au minimum un caractère alphabétique."
+     * )
+     */
+    private $description;
 
     public function __construct()
     {
@@ -136,6 +157,18 @@ class Roasting
                 $coffee->setRoasting(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
