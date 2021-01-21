@@ -9,7 +9,7 @@
         <li>Email: {{ user.email }}</li>
         <li>Rôles: 
             <ul>
-                {% for key, role in roles %}
+                {% for role in roles %}
                     <li>{{ role }}</li>
                 {% endfor %} 
             </ul>
@@ -17,14 +17,26 @@
         <li>Status: {{ user.status }}</li>
     </ul>
 
-<button><a href="{{ path('user_edit', {id:user.id}) }}">Modifier</a></button>
-<button><a href="{{ path('user_delete', {id:user.id}) }}">Supprimer</a></button>
+<button>
+    <a href="{{ path('user_edit', {slug:user.slug}) }}">Modifier les informations</a>
+</button>
 
-<hr>
+{# affichage des lignes seulement si le slug de l'utilisateur actuel et celui de la cible sont identiques #}
+{% if app.user.Slug == userSlug %}
+    <button>
+        <a href="{{ path('user_edit_password', {slug:user.slug}) }}">Modifier le mot de passe</a>
+    </button>
+{% endif %}
+
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+    <button>
+        <a href="{{ path('user_delete', {slug:user.slug}) }}">Supprimer</a>
+    </button>
+{% endif %}
+
 {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('user_list') }}">Retour</a>
-{% else %}
-    <a href="{{ path('main_home') }}">Retour</a>
+    <hr>
+    <a href="{{ path('user_list') }}">Retour à la liste</a>
 {% endif %}
 
 {% endblock %}

@@ -4,8 +4,10 @@
 
 {% block body %}
 
-<a href="{{ path('roasting_new') }}">Ajouter une nouvelle torréfaction</a>
-<hr>
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('roasting_new') }}">Ajouter une nouvelle torréfaction</a>
+    <hr>
+{% endif %}
 
 <table>
     <th class="classify">Nom</th>

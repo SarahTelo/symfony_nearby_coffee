@@ -7,19 +7,35 @@
 <table>
     <th>Nom</th>
     <th>Prénom</th>
-    <th>Role</th>
+    <th>Administrateur</th>
+    <th>Responsable</th>
     <th></th>
-        {% for user in users %}
+        {% for key, user in users %}
             <tr>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.firstname }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td><a href="{{ path('user_detail', {id:user.id}) }}">Détail</a></td>
+                <td>
+                    {% for role in user.roles %}
+                        {% if role == 'ROLE_ADMIN' %} 
+                            A
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for role in user.roles %}
+                        {% if role == 'ROLE_RESPONSIBLE' %} 
+                            R
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td><a href="{{ path('user_detail', {slug:user.slug}) }}">Détail</a></td>
             </tr>
         {% endfor %}
 </table>
 
-<hr>
-<button><a href="{{ path('user_new') }}">Ajouter un utilisateur</a></button>
+{% if is_granted('ROLE_ADMIN') %}
+    <hr>
+    <button><a href="{{ path('user_new') }}">Ajouter un utilisateur</a></button>
+{% endif %}
 
 {% endblock %}

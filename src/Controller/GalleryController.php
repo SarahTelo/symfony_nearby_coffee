@@ -37,9 +37,7 @@ class GalleryController extends AbstractController
         //appel de la fonction présente dans le repository
         $gallery = $repository->findAll();
 
-        return $this->render('gallery/list.html.twig', [
-            'gallery' => $gallery,
-        ]);
+        return $this->render('gallery/list.html.twig', [ 'gallery' => $gallery ]);
     }
 
     /**
@@ -126,7 +124,7 @@ class GalleryController extends AbstractController
      * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
      * @param request $request
-     * @param gallery => (injection de dépendance)
+     * @param gallery $gallery => (injection de dépendance)
      * @return void
      */
     public function galleryEdit(Request $request, gallery $gallery, FileUploader $fileUploader): Response

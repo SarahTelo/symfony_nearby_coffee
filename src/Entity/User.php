@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-//todo mettre à "false" le "match" de firstname et lastname (pour activer la regex)
+//todo mettre à "false" le "match [0-9]" de firstname et lastname (pour activer la regex)
 //todo mettre à 8 le "min" de "length" du password
 
 /**
@@ -27,7 +27,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      * @Assert\Email(
      *      message = "Le format de l'adresse mail est incorrect."
      * )
@@ -36,14 +38,18 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Assert\NotBlank
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      * @Assert\Regex(
      *      pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*).+$^",
      *      match = true,
@@ -59,24 +65,58 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
      * @Assert\Type(type = "string")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
+     * @Assert\Length(
+     *      min=1, max=100,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
      * @Assert\Regex(
-     *      pattern = "[0-9]",
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
+     *      message = "Le prénom ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[0-9]]",
+     *      match = true,
      *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le prénom doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
      * @Assert\Type(type = "string")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
+     * @Assert\Length(
+     *      min=1, max=100,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
+     * )
      * @Assert\Regex(
-     *      pattern = "[0-9]",
+     *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
+     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[0-9]]",
+     *      match = true,
      *      message = "Le nom ne doit pas contenir de chiffres ou de nombres."
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $lastname;

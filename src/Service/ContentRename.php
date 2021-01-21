@@ -23,7 +23,10 @@ class ContentRename
                 $renamedStrings[] = 'Administrateur';
             } elseif ($value == 'ROLE_RESPONSIBLE') {
                 $renamedStrings[] = 'Responsable';
-            } else {
+            } elseif ($value == 'ROLE_SUPER_ADMIN') {
+                $renamedStrings[] = 'Super administrateur';
+            }
+             else {
                 continue;
             }
         }
