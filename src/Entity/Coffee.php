@@ -38,11 +38,6 @@ class Coffee
      *      message = "Le nom du café ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
-     *      pattern = "[[0-9]]",
-     *      match = true,
-     *      message = "Le nom du café ne doit pas contenir de chiffres ou de nombres."
-     * )
-     * @Assert\Regex(
      *      pattern = "[[a-zA-Z]]",
      *      match = true,
      *      message = "Le nom du café doit contenir au minimum un caractère alphabétique."
@@ -68,7 +63,7 @@ class Coffee
      * )
      * @Assert\Regex(
      *      pattern = "[[0-9]]",
-     *      match = true,
+     *      match = false,
      *      message = "Le pays ne doit pas contenir de chiffres ou de nombres."
      * )
      * @Assert\Regex(

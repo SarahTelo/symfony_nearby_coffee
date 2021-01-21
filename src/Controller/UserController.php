@@ -175,7 +175,7 @@ class UserController extends AbstractController
         //méthode POST utilisée (plus rapide)
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        //les données de l'utilisateur à éditer sont injectés dans le "formulaire" créé
+        //les données de l'utilisateur à éditer sont injectées dans le "formulaire" créé
         $form = $this->createForm(UserTypeEdit::class, $user, [ 'attr' => [
             'novalidate' => 'novalidate', 
             'data' => $user->getId(),
@@ -244,7 +244,7 @@ class UserController extends AbstractController
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        //les données de l'utilisateur à éditer sont injectés dans le "formulaire" créé
+        //les données de l'utilisateur à éditer sont injectées dans le "formulaire" créé
         $form = $this->createForm(UserTypePassword::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);

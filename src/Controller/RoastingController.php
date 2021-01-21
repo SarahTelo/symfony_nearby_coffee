@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Roasting;
 use App\Form\RoastingType;
 use App\Repository\RoastingRepository;
+use App\Entity\Coffee;
+use App\Repository\CoffeeRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,9 +35,7 @@ class RoastingController extends AbstractController
         //appel de la fonction présente dans le repository
         $roastings = $repository->findAll();
 
-        return $this->render('roasting/list.html.twig', [
-            'roastings' => $roastings,
-        ]);
+        return $this->render('roasting/list.html.twig', [ 'roastings' => $roastings ]);
     }
 
     /**
@@ -43,13 +43,23 @@ class RoastingController extends AbstractController
      * 
      * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
      * 
-     * @param int $id
+     * @param integer $id
      * @return void
      */
     public function roastingDetail(Roasting $roasting): Response
     {
-        return $this->render('roasting/detail.html.twig', [
-            'roasting' => $roasting,
+        /** @var CoffeeRepository $repository */
+        //appel du repository des cafés
+        $repository = $this->getDoctrine()->getRepository(Coffee::class);
+        //recherche de tous les cafés pour une torréfaction
+        $coffees = $repository->findAllByRoastingId($roasting->getId());
+        //nombre de cafés par catégorie de torréfaction
+        $coffeesNumber = count($coffees);
+
+        return $this->render('roasting/detail.html.twig', [ 
+            'roasting' => $roasting, 
+            'coffees' => $coffees, 
+            'coffeesNumber' => $coffeesNumber 
         ]);
     }
 
@@ -95,7 +105,7 @@ class RoastingController extends AbstractController
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "La torréfaction {$roastingName} n'a pas pu être ajoutée, veuillez contacter l'administrateur du site.";
-                $route = 'roasting_new';
+                $route = 'roasting_list';
             }
 
             //remplissage du message d'information
@@ -115,7 +125,7 @@ class RoastingController extends AbstractController
      * 
      * @Route("/admin/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
-     * @param int $id
+     * @param integer $id
      * @param request $request
      * @return void
      */
@@ -125,7 +135,7 @@ class RoastingController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Roasting::class);
         $roasting = $repository->find($id);
 
-        //les données de la torréfaction à éditer sont injecté dans le "formulaire" créé
+        //les données de la torréfaction à éditer sont injectées dans le "formulaire" créé
         $form = $this->createForm(RoastingType::class, $roasting, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage de l'ancien nom de la torréfaction
         $oldName = $roasting->getName();
@@ -164,7 +174,9 @@ class RoastingController extends AbstractController
         {
             return $this->render('roasting/edit.html.twig', [ 
                 'form_roasting_edit' => $form->createView(), 
-                'name' => $roasting->getName() ]); 
+                'name' => $roasting->getName(),
+                'roastingId' => $roasting->getId(),
+            ]); 
         }
     }
 
@@ -173,13 +185,14 @@ class RoastingController extends AbstractController
      * 
      * @Route("/admin/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
      * 
-     * @param int $id
+     * @param integer $id
      * @return void
      */
     public function roastingDelete(int $id): Response
     {
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         /** @var RoastingRepository $repository */
         $repository = $this->getDoctrine()->getRepository(Roasting::class);
         $roasting = $repository->find($id);

@@ -4,7 +4,22 @@
 
 {% block body %}
 
-    <p>{{ roasting.name }}</p>
+<p>{{ roasting.name }}</p>
+<table>
+    <th>Liste des cafés {{ roasting.name }}</th>
+
+        {% for coffee in coffees %}
+            <tr>
+                <td>{{ coffee.name }}</td>
+            </tr>
+        {% endfor %}
+        
+        <tr>
+            <td>Total: {{ coffeesNumber }}</td>
+        </tr>
+</table>
+
+
 
 {% if is_granted('ROLE_ADMIN') %}
     <button><a href="{{ path('roasting_edit', {id:roasting.id}) }}">Modifier</a></button>

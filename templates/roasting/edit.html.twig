@@ -7,6 +7,6 @@
 {{ form(form_roasting_edit) }}
 
 <hr>
-<a href="{{ path('roasting_list') }}">Retour à la liste des torréfactions</a>
+<a href="{{ path('roasting_detail', {id:roastingId}) }}">Retour au détail</a>
 
 {% endblock %}

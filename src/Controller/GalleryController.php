@@ -201,6 +201,9 @@ class GalleryController extends AbstractController
      */
     public function galleryDelete(gallery $gallery, FileUploader $fileUploader): Response
     {
+        //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         //stockage du nom d'une image pour le réutiliser
         $galleryName = $gallery->getName();
         //stockage du nom physique de l'une image pour le réutiliser
