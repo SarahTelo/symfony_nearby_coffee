@@ -114,7 +114,7 @@ class UserController extends AbstractController
             $user = $form->getData();
             //date de création
             $user->setCreatedAt( new \DateTime('now') );
-            //TODO : prochainement: mettre un mot de passe automatique qui devra être obligatoirement changé lors de la première connexion
+            //todo : prochainement: mettre un mot de passe automatique qui devra être obligatoirement changé lors de la première connexion
             //stockage du mdp transmis par le formulaire
             $originalPassword = $user->getPassword();
             //encodage du mdp

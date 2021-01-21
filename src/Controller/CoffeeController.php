@@ -43,7 +43,7 @@ class CoffeeController extends AbstractController
      * 
      * @Route("/detail/{slug}", name="_detail", methods={"GET"})
      * 
-     * @param coffee => (injection de dépendance)
+     * @param coffee $coffee => injection de dépendance
      * @return void
      */
     public function coffeeDetail(Coffee $coffee): Response
@@ -105,7 +105,7 @@ class CoffeeController extends AbstractController
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "Le café {$coffeeName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
-                $route = 'coffee_new';
+                $route = 'coffee_list';
                 $coffeeSlug = null;
             }
 
@@ -127,7 +127,7 @@ class CoffeeController extends AbstractController
      * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
      * @param request $request
-     * @param coffee => (injection de dépendance)
+     * @param coffee $coffee => injection de dépendance
      * @return void
      */
     public function coffeeEdit(Request $request, coffee $coffee): Response
@@ -191,7 +191,7 @@ class CoffeeController extends AbstractController
      * 
      * @Route("/admin/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
-     * @param coffee => (injection de dépendance)
+     * @param coffee $coffee => injection de dépendance
      * @return void
      */
     public function coffeeDelete(coffee $coffee): Response
