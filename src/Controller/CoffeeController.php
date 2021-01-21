@@ -10,12 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-//use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use SluggerService;
-//use DateTime;
-//use Symfony\Component\Serializer\SerializerInterface;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * *Classe de gestion d'affichage des cafés
@@ -39,9 +35,7 @@ class CoffeeController extends AbstractController
         //appel de la fonction présente dans le repository
         $coffees = $repository->findAllDetailsList();
 
-        return $this->render('coffee/list.html.twig', [
-            'coffees' => $coffees,
-        ]);
+        return $this->render('coffee/list.html.twig', [ 'coffees' => $coffees ]);
     }
 
     /**
@@ -54,11 +48,9 @@ class CoffeeController extends AbstractController
      */
     public function coffeeDetail(Coffee $coffee): Response
     {
-        //EN PASSANT PAR L'ID: voir UserController/userDetail
+        //EN PASSANT PAR L'ID: voir RoastingController
         //avec le slug, Doctrine fait: select*from coffee where slug='{slug}'
-        return $this->render('coffee/detail.html.twig', [
-            'coffee' => $coffee,
-        ]);
+        return $this->render('coffee/detail.html.twig', [ 'coffee' => $coffee ]);
     }
 
     /**
@@ -104,7 +96,6 @@ class CoffeeController extends AbstractController
                 //sauvegarde
                 $em->persist($coffee);
                 //envoi à la BDD
-                //! à décommenter pour sauvegarder en BDD
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
@@ -229,5 +220,4 @@ class CoffeeController extends AbstractController
         //redirection vers la route choisie
         return $this->redirectToRoute('coffee_list');
     }
-
 }

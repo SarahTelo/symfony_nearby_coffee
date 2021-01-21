@@ -37,7 +37,6 @@ class CoffeeType extends AbstractType
         ])
         ->add('price', NumberType::class, [
             'label' => 'Prix du café',
-            //'help' => 'test',
             'required' => false,
             'attr' => ['placeholder' => 'Saisir le prix du café'],
         ])

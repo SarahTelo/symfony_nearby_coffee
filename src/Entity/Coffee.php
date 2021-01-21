@@ -24,21 +24,28 @@ class Coffee
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Type(type = "string")
-     * @Assert\NotBlank(message="Champ obligatoire")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      * @Assert\Length(
-     *      min=1, max=50,
-     *      minMessage = "Minimum 1 caractère",
-     *      maxMessage = "Maximum 50 caractères",
+     *      min=1, max=100,
+     *      minMessage = "Minimum {{ limit }} caractère",
+     *      maxMessage = "Maximum {{ limit }} caractères",
      * )
      * @Assert\Regex(
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     *      message = "Le nom du café ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
-     *      pattern = "[[[a-zA-Z]+]]",
-     *      match = false,
-     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     *      pattern = "[[0-9]]",
+     *      match = true,
+     *      message = "Le nom du café ne doit pas contenir de chiffres ou de nombres."
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le nom du café doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $name;
@@ -46,21 +53,28 @@ class Coffee
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Type(type = "string")
-     * @Assert\NotBlank(message="Champ obligatoire")
+     * @Assert\NotBlank(
+     *      message="Champ obligatoire."
+     * )
      * @Assert\Length(
-     *      min=1, max=50,
+     *      min=1, max=100,
      *      minMessage = "Minimum {{ limit }} caractère",
      *      maxMessage = "Maximum {{ limit }} caractères",
      * )
      * @Assert\Regex(
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     *      message = "Le pays ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
-     *      pattern = "[[[a-zA-Z]+]]",
-     *      match = false,
-     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     *      pattern = "[[0-9]]",
+     *      match = true,
+     *      message = "Le pays ne doit pas contenir de chiffres ou de nombres."
+     * )
+     * @Assert\Regex(
+     *      pattern = "[[a-zA-Z]]",
+     *      match = true,
+     *      message = "Le pays doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $country;
