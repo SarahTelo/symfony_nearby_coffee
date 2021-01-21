@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
- * @UniqueEntity("name", message="La photo existe déjà")
+ * @UniqueEntity("name", message="La photo existe déjà.")
  */
 class Gallery
 {
@@ -28,19 +28,19 @@ class Gallery
      *      message="Champ obligatoire."
      * )
      * @Assert\Length(
-     *      min=1, max=100,
+     *      min=1, max=200,
      *      minMessage = "Minimum {{ limit }} caractère",
      *      maxMessage = "Maximum {{ limit }} caractères",
      * )
      * @Assert\Regex(
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;()]]",
      *      match = false,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;()"
+     *      message = "Le nom de l'image ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
      *      pattern = "[[a-zA-Z]]",
      *      match = true,
-     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     *      message = "Le nom de l'image doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $name;
@@ -76,12 +76,12 @@ class Gallery
      * @Assert\Regex(
      *      pattern = "[[=%\$<>*+\}\{\\\/\]\[;]]",
      *      match = false,
-     *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: =%$<>*+}{\/][;"
+     *      message = "La description ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ;"
      * )
      * @Assert\Regex(
      *      pattern = "[[a-zA-Z]]",
      *      match = true,
-     *      message = "Le nom doit contenir au minimum un caractère alphabétique."
+     *      message = "La description doit contenir au minimum un caractère alphabétique."
      * )
      */
     private $description;

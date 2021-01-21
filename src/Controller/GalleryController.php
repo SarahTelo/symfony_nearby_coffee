@@ -10,10 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use SluggerService;
 use App\Service\FileUploader;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * *Classe de gestion d'affichage des images
@@ -97,19 +97,16 @@ class GalleryController extends AbstractController
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "L'image {$galleryName} a bien été ajoutée.";
-                $route = 'gallery_list';
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "L'image {$galleryName} n'a pas pu être ajoutée, veuillez contacter l'administrateur du site.";
-                $route = 'gallery_new';
-                $gallerySlug = null;
             }
 
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute('gallery_list');
         }
         //-> sinon affichage du formulaire vide
         else
@@ -124,7 +121,7 @@ class GalleryController extends AbstractController
      * @Route("/admin/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
      * @param request $request
-     * @param gallery $gallery => (injection de dépendance)
+     * @param gallery $gallery $gallery => injection de dépendance
      * @return void
      */
     public function galleryEdit(Request $request, gallery $gallery, FileUploader $fileUploader): Response
@@ -199,7 +196,7 @@ class GalleryController extends AbstractController
      * 
      * @Route("/admin/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
-     * @param gallery => (injection de dépendance)
+     * @param gallery $gallery => injection de dépendance
      * @return void
      */
     public function galleryDelete(gallery $gallery, FileUploader $fileUploader): Response
@@ -216,13 +213,13 @@ class GalleryController extends AbstractController
             $em->remove($gallery);
             //envoi à la BDD
             $em->flush();
-            //vérifier si le nom de la photo est reliée à un fichier physique
+            //vérifier si le nom de l'image est relié à un fichier physique
             if($galleryWay === null) {
                 $result = 'success';
                 $message = "L'image {$galleryName} a bien été supprimée.";
             } else {
                 //remplissage des variables pour le message d'information d'état final 
-                //en fonction du bon déroulement de la suppression du fichier physique de la photo
+                //en fonction du bon déroulement de la suppression du fichier physique de l'image
                 if ($fileUploader->deleteFileGallery($galleryWay)) {
                     $result = 'success';
                     $message = "L'image {$galleryName} a bien été supprimée.";
