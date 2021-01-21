@@ -39,14 +39,16 @@ security:
     access_control:
         # TODO : mettre le HTTPS + la génération de certificats
         #- { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-        - { path: ^/admin/user/\d+/edit, roles: ROLE_RESPONSIBLE }
-        - { path: ^/admin/user/\d+/detail, roles: ROLE_RESPONSIBLE }
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/coffee/admin, roles: ROLE_RESPONSIBLE }
-        - { path: ^/gallery/admin, roles: ROLE_RESPONSIBLE }
-        - { path: ^/roasting, roles: ROLE_RESPONSIBLE }
-        # - { path: ^/profile, roles: ROLE_USER }
+        #- { path: ^/profile, roles: ROLE_USER }
+        #- { path: ^/admin/user/\d+/edit, roles: ROLE_RESPONSIBLE }
+        - { path: ^/admin/user/delete, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/admin/user/new,    roles: ROLE_ADMIN }
+        - { path: ^/admin,             roles: ROLE_RESPONSIBLE }
+        - { path: ^/coffee/admin,      roles: ROLE_ADMIN }
+        - { path: ^/roasting/admin,    roles: ROLE_ADMIN }
+        - { path: ^/gallery/admin,     roles: ROLE_RESPONSIBLE }
     
     role_hierarchy:
         ROLE_ADMIN: [ ROLE_RESPONSIBLE ]
+        ROLE_SUPER_ADMIN: [ ROLE_RESPONSIBLE, ROLE_ADMIN ]
 

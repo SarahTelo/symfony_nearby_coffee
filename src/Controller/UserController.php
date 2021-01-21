@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserTypeEdit;
+use App\Form\UserTypePassword;
 use App\Repository\UserRepository;
-//use App\Service\ContentRename as ServiceContentRename;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+use SluggerService;
 use App\Service\ContentRename;
 
 //TODO : mettre un autre token dans les autres routes
@@ -33,7 +36,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * *Affichage de la liste des utilisateurs avec les détails
+     * *Affichage de la liste des utilisateurs avec les détails (roles: admin et super admin)
      * 
      * @Route("/list", name="_list", methods={"GET"})
      * 
@@ -47,34 +50,32 @@ class UserController extends AbstractController
         //appel de la fonction présente dans le repository
         $users = $repository->findAll();
 
-        return $this->render('user/list.html.twig', [
-            'users' => $users,
-        ]);
+        return $this->render('user/list.html.twig', [ 'users' => $users ]);
     }
 
     /**
      * *Affichage du détail d'un utilisateur
      * 
-     * @Route("/{id}/detail", name="_detail", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("/detail/{slug}", name="_detail", methods={"GET"})
      * 
-     * @param id $id
+     * @param user $user => injection de dépendance
      * @return void
      */
-    public function userDetail(int $id): Response
+    public function userDetail(User $user): Response
     {
         //récupération de l'utilisateur actuel
         $currentUserId = $this->getUser()->getId();
+        //récupération de l'id de l'utilisateur ciblé par son slug
+        $id = $user->getId();
         //vérification de ses rôles
         $hasAccess = $this->isGranted('ROLE_ADMIN');
-        //s'il n'est pas admin, alors l'id sera le sien
-        if ($hasAccess !== true) {
-            $id = $currentUserId;
-        }   
+        //s'il n'est pas admin, alors l'id sera le sien, sinon, recherche de l'utilisateur ciblé par son slug
+        $id = $hasAccess ? $id : $currentUserId;
 
         /** @var UserRepository $repository */
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);
-        
+
         //réécriture des rôles
         $arrayRoles = $user->getRoles();
         $contentRename = new ContentRename;
@@ -83,11 +84,12 @@ class UserController extends AbstractController
         return $this->render('user/detail.html.twig', [
             'user' => $user,
             'roles' => $arrayRolesModify,
+            'userSlug' => $user->getSlug(),
         ]);
     }
 
     /**
-     * *Ajout d'un utilisateur
+     * *Ajout d'un utilisateur (roles: admin et super admin)
      * 
      * @Route("/new", name="_new", methods={"POST", "GET"})
      * 
@@ -112,38 +114,45 @@ class UserController extends AbstractController
             $user = $form->getData();
             //date de création
             $user->setCreatedAt( new \DateTime('now') );
+            //TODO : prochainement: mettre un mot de passe automatique qui devra être obligatoirement changé lors de la première connexion
             //stockage du mdp transmis par le formulaire
             $originalPassword = $user->getPassword();
             //encodage du mdp
             $user->setPassword($this->passwordEncoder->encodePassword($user, $originalPassword));
+
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
+            //instancier le service
+            $slugger = new SluggerService();
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $userSlug = $slugger->slugify($userFullName). "-" .uniqid();
+            //sauvegarde du nom en format slug
+            $user->setSlug($userSlug);
 
             try {
                 //appel de l'entity manager
                 $em = $this->getDoctrine()->getManager();
-                //sauvegarde
+                //sauvegarde et envoi à la BDD
                 $em->persist($user);
                 //envoi à la BDD
-                //! à décommenter pour sauvegarder en BDD
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
                 $message = "L'utilisateur {$userFullName} a bien été ajouté";
-                $route = 'user_list';
-                $userId = $user->getId();
+                $route = 'user_detail';
+                $userSlug = $user->getSlug();
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
                 $message = "L'utilisateur {$userFullName} n'a pas pu être ajouté, veuillez contacter l'administrateur du site.";
-                $route = 'user_new';
-                $userId = null;
+                $route = 'user_list';
+                $userSlug = null;
             }
 
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute($route, ['userId' => $userId]);
+            return $this->redirectToRoute($route, [ 'slug' => $userSlug ]);
         }
         //-> sinon affichage du formulaire vide
         else
@@ -155,36 +164,41 @@ class UserController extends AbstractController
     /**
      * *Edition du profil d'un utilisateur
      * 
-     * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * @Route("/edit/{slug}", name="_edit", methods={"GET", "PUT", "PATCH", "POST"})
      * 
-     * @param int $id
      * @param request $request
+     * @param user $user => injection de dépendance
      * @return void
      */
-    public function userEdit(Request $request, int $id): Response
+    public function userEdit(Request $request, User $user): Response
     {
+        //méthode POST utilisée (plus rapide)
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        //méthode POST utilisée (plus rapide)
-        /** @var UserRepository $repository */
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $user = $repository->find($id);
-        //les données du utilisateur à éditer sont injecté dans le "formulaire" créé
-        $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+        //les données de l'utilisateur à éditer sont injectés dans le "formulaire" créé
+        $form = $this->createForm(UserTypeEdit::class, $user, [ 'attr' => [
+            'novalidate' => 'novalidate', 
+            'data' => $user->getId(),
+        ]]);
         //stockage de l'ancien nom
         $oldName = $user->getFirstname() . " " . $user->getLastname();
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
-
-        //TODO : à debug
-        
+         
         //-> si le formulaire a été validé, récupération des données et traitement de celles-ci
         if ($form->isSubmitted() && $form->isValid()) 
         {
             //date de mise à jour
             $user->setUpdatedAt( new \DateTime('now') );
+
             //stockage du nom de l'utilisateur pour le réutiliser
-            //$userFullName = $user->getFirstname() . " " . $user->getLastname();
+            $userFullName = $user->getFirstname() . " " . $user->getLastname();
+            //instancier le service
+            $slugger = new SluggerService();
+            //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
+            $userSlug = $slugger->slugify($userFullName). "-" .uniqid();
+            //sauvegarde du nom en format slug
+            $user->setSlug($userSlug);
 
             try {
                 //appel de l'entity manager
@@ -203,7 +217,7 @@ class UserController extends AbstractController
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute('user_detail', [ 'id' => $user->getId() ]);
+            return $this->redirectToRoute('user_detail', [ 'slug' => $user->getSlug() ]);
         }
         //-> sinon affichage du formulaire avec les données du utilisateur à éditer
         else
@@ -211,83 +225,86 @@ class UserController extends AbstractController
             return $this->render('user/edit.html.twig', [ 
                 'form_user_edit' => $form->createView(), 
                 'name' => $user->getFirstname() . " " . $user->getLastname(), 
-                'userDetailId' => $user->getId() ]); 
+                'userSlug' => $user->getSlug(),
+            ]); 
         }
     }
+
     /**
      * *Edition du mot de passe
      * 
-     * @Route("/{id}/edit/password", name="_edit_password", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * @Route("/edit/password/{slug}", name="_edit_password", methods={"GET", "PUT", "PATCH", "POST"})
      * 
-     * @param int $id
+     * @param user $user
      * @param request $request
      * @return void
      */
-    public function userEditPassword(Request $request, int $id): Response
+    public function userEditPassword(Request $request, User $user): Response
     {
-        //TODO : faire le template
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        //méthode POST utilisée (plus rapide)
-        /** @var UserRepository $repository */
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $user = $repository->find($id);
-        //TODO : modifier "UserType" lorsque "UserTypePassword" sera créé
-        $form = $this->createForm(UserType::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
+
+        //les données de l'utilisateur à éditer sont injectés dans le "formulaire" créé
+        $form = $this->createForm(UserTypePassword::class, $user, [ 'attr' => ['novalidate' => 'novalidate'] ]);
         //stockage des données du formulaire dans la request
         $form->handleRequest($request);
-
-        //stockage de l'ancien nom
+        
+        //stockage du nom
         $userFullName = $user->getFirstname() . " " . $user->getLastname();
 
         if ($form->isSubmitted() && $form->isValid()) 
         {
-            //date de mise à jour
-            $user->setUpdatedAt( new \DateTime('now') );
+            //date de création
+            $user->setCreatedAt( new \DateTime('now') );
+            //stockage du mdp transmis par le formulaire
+            $originalPassword = $user->getPassword();
+            //encodage du mdp
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $originalPassword));
 
             try {
                 //appel de l'entity manager
                 $em = $this->getDoctrine()->getManager();
                 //sauvegarde
-                $em->persist($user);
+                //$em->persist($user);
                 //envoi à la BDD
                 $em->flush();
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'success';
-                $message = "Le utilisateur {$userFullName} a bien été modifié";
+                $message = "Votre mot de passe a bien été modifié.";
             } catch (\Throwable $th) {
                 //remplissage des variables pour le message d'information d'état final
                 $result = 'danger';
-                $message = "Le utilisateur {$userFullName} n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
+                $message = "Votre mot de passe n'a pas pu être modifié, veuillez contacter l'administrateur du site.";
             }
             
             //remplissage du message d'information
             $this->addFlash($result, $message);
             //redirection vers la route choisie
-            return $this->redirectToRoute('user_detail', [ 'id' => $user->getId() ]);
+            return $this->redirectToRoute('user_detail', [ 'slug' => $user->getSlug() ]);
         }
         else
         {
-            return $this->render('user/editPassword.html.twig', [ 'form_user_edit_password' => $form->createView(), ] );
+            return $this->render('user/editPassword.html.twig', [
+                'form_user_edit_password' => $form->createView(), 
+                'name' => $userFullName, 
+                'userSlug' => $user->getSlug(),
+            ]);
         }
-
     }
 
     /**
-     * *Suppression d'un utilisateur
+     * *Suppression d'un utilisateur (role: super admin)
      * 
-     * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
+     * @Route("/delete/{slug}", name="_delete", methods={"GET", "DELETE"})
      * 
-     * @param id $id
+     * @param user $user
      * @return void
      */
-    public function userDelete(int $id): Response
+    public function userDelete(User $user): Response
     {
         //reconnexion obligatoire si connexion précédente étaient en IS_AUTHENTICATED_REMEMBERED
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        /** @var UserRepository $repository */
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $user = $repository->find($id);
+        
         //stockage du nom de l'utilisateur pour le réutiliser
         $userFullName = $user->getFirstname() . " " . $user->getLastname();
 
@@ -297,8 +314,7 @@ class UserController extends AbstractController
             //sauvegarde
             $em->remove($user);
             //envoi à la BDD
-            //! à décommenter pour sauvegarder en BDD => 
-            //!$em->flush();
+            $em->flush();
             //remplissage des variables pour le message d'information d'état final
             $result = 'success';
             $message = "L'utilisateur {$userFullName} a bien été supprimé";

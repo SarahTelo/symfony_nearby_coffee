@@ -214,8 +214,7 @@ class CoffeeController extends AbstractController
             //sauvegarde
             $em->remove($coffee);
             //envoi à la BDD
-            //! à décommenter pour sauvegarder en BDD => 
-            //!$em->flush();
+            $em->flush();
             //remplissage des variables pour le message d'information d'état final
             $result = 'success';
             $message = "Le café {$coffeeName} a bien été supprimé";

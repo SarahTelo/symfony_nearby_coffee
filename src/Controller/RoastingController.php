@@ -56,7 +56,7 @@ class RoastingController extends AbstractController
     /**
      * *Ajout d'une torréfaction
      * 
-     * @Route("/new", name="_new", methods={"GET", "POST"})
+     * @Route("/admin/new", name="_new", methods={"GET", "POST"})
      * 
      * @param request $request
      * @return void
@@ -113,7 +113,7 @@ class RoastingController extends AbstractController
     /**
      * *Edition d'une torréfaction
      * 
-     * @Route("/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
+     * @Route("/admin/{id}/edit", name="_edit", methods={"GET", "PUT", "PATCH", "POST"}, requirements={"id"="\d+"})
      * 
      * @param int $id
      * @param request $request
@@ -171,7 +171,7 @@ class RoastingController extends AbstractController
     /**
      * *Suppression d'une torréfaction
      * 
-     * @Route("/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
+     * @Route("/admin/{id}/delete", name="_delete", methods={"GET", "DELETE"}, requirements={"id"="\d+"})
      * 
      * @param int $id
      * @return void

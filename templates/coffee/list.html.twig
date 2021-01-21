@@ -4,7 +4,7 @@
 
 {% block body %}
 
-{% if is_granted('ROLE_RESPONSIBLE') %}
+{% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('coffee_new') }}">Ajouter un nouveau café</a>
 <hr>
 {% endif %}

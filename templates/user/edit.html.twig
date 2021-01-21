@@ -4,29 +4,9 @@
 
 {% block body %}
 
-{# affichage des lignes seulement si l'utilisateur a le rôle admin #}
-{% if is_granted('ROLE_ADMIN') %}
-    {{ form_start(form_user_edit) }}
-        {{ form_row(form_user_edit.firstname) }}
-        {{ form_row(form_user_edit.lastname) }}
-        {{ form_row(form_user_edit.email) }}
-        {{ form_row(form_user_edit.roles) }}
-    {# ne pas renvoyer le reste du formulaire #}
-    {{ form_end(form_user_edit, {'render_rest': false}) }}
-{% endif %}
-
-{# affichage des lignes seulement si l'id de l'utilisateur sont identiques #}
-{% if app.user.id == userDetailId %}
-    {{ form_start(form_user_edit) }}
-        {{ form_row(form_user_edit.password) }}
-    {{ form_end(form_user_edit, {'render_rest': false}) }}
-{% endif %}
-
-{{ form_start(form_user_edit) }}
-    {{ form_row(form_user_edit.save) }}
-{{ form_end(form_user_edit, {'render_rest': false}) }}
+{{ form(form_user_edit) }}
 
 <hr>
-<a href="{{ path('user_detail', {id:userDetailId}) }}">Retour</a>
+<a href="{{ path('user_detail', {slug:userSlug}) }}">Retour au détail</a>
 
 {% endblock %}
