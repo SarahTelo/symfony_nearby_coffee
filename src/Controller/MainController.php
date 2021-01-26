@@ -2,15 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Coffee;
+use App\Repository\CoffeeRepository;
+
 use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Symfony\Component\HttpFoundation\Request;
-
-use Monolog\Handler\SwiftMailerHandler;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 
 class MainController extends AbstractController
 {
@@ -19,7 +18,13 @@ class MainController extends AbstractController
      */
     public function home(): Response
     {
-        return $this->render('main/home.html.twig');
+        /** @var CoffeeRepository $repository */
+        //appel du repository des cafés
+        $repository = $this->getDoctrine()->getRepository(Coffee::class);
+        //recherche du dernier café ajouté
+        $lastCoffee = $repository->findLastCoffee();
+
+        return $this->render('main/home.html.twig', [ 'lastCoffee' => $lastCoffee ]);
     }
 
     /**
@@ -43,7 +48,6 @@ class MainController extends AbstractController
         {
             //récupération des données du formulaire
             $contact = $form->getData();
-            /** @var Swift_Mailer $mailer */
             $message = new \Swift_Message('Nouveau contact');
             //Expéditeur
             $message->setFrom($contact['email'])

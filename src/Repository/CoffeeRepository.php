@@ -42,7 +42,7 @@ class CoffeeRepository extends ServiceEntityRepository
      * *Recherche de tous les cafés pour chaque torréfaction
      *
      * @param integer $roastingId
-     * @return void
+     * @return array
      */
     public function findAllByRoastingId(int $roastingId) 
     {
@@ -51,6 +51,22 @@ class CoffeeRepository extends ServiceEntityRepository
         //propriété de l'entité "coffee": "roasting"
         //stockage de la réponse
         $query = $queryBuilder->where("coffees.roasting = $roastingId")->getQuery();
+        //envoi des résultats
+        return $query->getResult(); 
+    }
+
+    /**
+     * *Recherche du dernier café ajouté
+     * 
+     * @return array
+     */
+    public function findLastCoffee() 
+    {
+        //SELECT * FROM coffee ORDERBY created_at DESC LIMIT 1
+        $queryBuilder = $this->createQueryBuilder('coffees');
+        //propriété de l'entité "coffee": "created_at"
+        //stockage de la réponse
+        $query = $queryBuilder->orderBy('coffees.created_at', 'DESC')->setMaxResults(1)->getQuery();
         //envoi des résultats
         return $query->getResult(); 
     }
