@@ -1,9 +1,16 @@
 
 <footer style="text-align: end;">
+
+{# 
     <hr>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
     {% else %}
         <button><a href="{{ path('app_login') }}">connexion</a></button>
-    {% endif %}
+    {% endif %} 
+#}
+
+    <a href="{{ path('main_contact') }}">Contact</a>
+    <a href="{{ path('main_about') }}">A propos</a>
+
 </footer>

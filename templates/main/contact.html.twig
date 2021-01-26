@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nearby Coffee - Contactez nous{% endblock %}
+
+{% block body %}
+
+{{ form(form_contact) }}
+
+<hr>
+<a href="{{ path('main_home') }}">Retour à la page d'accueil</a>
+
+{% endblock %}
