@@ -1,0 +1,23 @@
+
+<nav class="container-fluid bg-light border">
+<div class="row align-items-center d-flex">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a class="col" href="{{ path('app_logout') }}"><button>DECONNEXION</button></a>
+
+        <p class="col d-inline-flex" >{{ app.user.firstname }}</p>
+
+        <a class="col" href="{{ path('user_detail', {slug:app.user.slug}) }}">MON PROFIL</a>
+    {% else %}
+        <a class="col" href="{{ path('app_login') }}"><button class="" >CONNEXION</button></a>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="col"  href="{{ path('user_list') }}">LISTE DES UTILISATEURS</a>
+    {% endif %}
+</div>
+</nav>
+
+{#  
+justify-content
+align-items
+#}

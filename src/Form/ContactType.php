@@ -13,8 +13,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-//TODO : mettre les contraintes, les caractérisques et les attributs
-
 class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -1,25 +1,9 @@
 
-<nav>
-
-<a href="{{ path('main_home') }}">Accueil</a>
-<hr>
-
-<a href="{{ path('coffee_list') }}">Cafés</a>
-<hr>
-
-<a href="{{ path('roasting_list') }}">Torréfactions</a>
-<hr>
-
-<a href="{{ path('gallery_list') }}">Galerie photo</a>
-<hr>
-
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <a href="{{ path('user_detail', {slug:app.user.slug}) }}">Mon profil</a>
-    <hr>
-{% endif %}
-{% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('user_list') }}">Liste des utilisateurs</a>
-    <hr>
-{% endif %}
-
+<nav class="container-fluid">
+    <div class="row">
+    <a class="col-3" href="{{ path('main_home') }}">ACCUEIL</a>
+    <a class="col-3" href="{{ path('coffee_list') }}">CAFES</a>
+    <a class="col-3" href="{{ path('roasting_list') }}">TORREFACTIONS</a>
+    <a class="col-3" href="{{ path('gallery_list') }}">GALERIE PHOTO</a>
+    </div>
 </nav>

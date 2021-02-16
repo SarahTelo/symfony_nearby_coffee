@@ -1,16 +1,6 @@
-
-<footer style="text-align: end;">
-
-{# 
-    <hr>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
-    {% else %}
-        <button><a href="{{ path('app_login') }}">connexion</a></button>
-    {% endif %} 
-#}
-
-    <a href="{{ path('main_contact') }}">Contact</a>
-    <a href="{{ path('main_about') }}">A propos</a>
-
-</footer>
+<div class="container-fluid">
+<div class="row justify-content-end">
+    <a class="col-1" href="{{ path('main_contact') }}">Contact</a>
+    <a class="col-1" href="{{ path('main_about') }}">A propos</a>
+</div>
+</div>

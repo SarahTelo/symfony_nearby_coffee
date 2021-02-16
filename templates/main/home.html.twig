@@ -6,6 +6,11 @@
 
 <h1>BIENVENUE</h1>
 
-{# TODO : mettre le dernier café ajouté #}
+<table>
+    {% for coffee in lastCoffee %}
+        <a class= "coffee_list-item" href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a>
+        <p>{{ coffee.roasting.name }}</p>
+    {% endfor %}
+</table>
 
 {% endblock %}
