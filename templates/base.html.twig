@@ -3,56 +3,62 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}Nearby Coffee{% endblock %}</title>
+        <meta name="description" content="Je suis développeuse Web Fullstack Symfony à la recherche d'un emploi.">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="icon" type="image/png" href="{{ asset('/logo/') }}logo.png">
 
-        <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
-
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('/css/style2.css') }}">
-
+        <link rel="stylesheet"  type="text/css" media="screen" href="{{ asset('/css/style.css') }}">
         {% endblock %}
         
     </head>
-    <body>
-        <header class="">
-
+    <body class="container-fluid p-0">
+    
+        <header class="" id="haut_de_page">
+            <section class="container-fluid d-flex flex-wrap nav_bg justify-content-evenly">
+            {# logo #}
+                <div class="col-lg-2 align-middle text-center ">
+                    <a class="" href="{{ path('main_home') }}">
+                        <img class="logo_64 margin_2 img-fluid"src="{{ asset('/logo/') }}logo.png" alt="logo" srcset="">
+                    </a>
+                </div>
             {# navbar #}
-            <section class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <a href="{{ path('main_home') }}">
-                            <i class="bi bi-cup">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" fill="currentColor" class="bi bi-cup" viewBox="0 0 16 16">
-                            <path d="M1 2a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v1h.5A1.5 1.5 0 0 1 16 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-.55a2.5 2.5 0 0 1-2.45  2h-8A2.5     2.5     0 0 1 1 12.5V2zm13 10h.5a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5H14v8zM13 2H2v10.5A1.5 1.5 0 0 0 3.5   14h8a1.5 1.5 0 0 0 1. 5-1.5V2z"/>
-                            </svg>
-                            </i>
-                        </a>
-                    </div>
-                    <div class="col-10">
+                <div class="col-lg-10 align-self-center align-middle py-lg-0 py-2 text-break px-1">
+                    <nav class="nav nav-tabs nav-fill d-flex border-0 link_bg line_height">
                         {% include '_navbar.html.twig' %}
-                    </div>
+                    </nav>
                 </div>
             </section>
-
             {# navbarAdmin #}
-            <section>
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <section class="container-fluid d-flex flex-wrap flex-row align-middle py-lg-0 py-2 justify-content-lg-end justify-content-center font_bold color_2 link_border-adm padding_2 padding_3">
                 {% include '_navbarAdmin.html.twig' %}
             </section>
+            {% endif %}
 
         </header>
 
-        <section>
-            {% include '_flash.html.twig' %}
-        </section>
-
-        <main>
-            {% block body %}{% endblock %}
+        <main class="container-fluid main_frame p-0 height_100">
+            <h1 class="text-center sticky-top subtitle_bg padding_2" style="color: black;">
+                {% block subtitle %}{% endblock %}
+            </h1>
+            {# messages flash #}
+            <section>
+                {% include '_flash.html.twig' %}
+            </section>
+            <div class="container-fluid padding_1">
+                {% block body %}{% endblock %}
+            </div>
         </main>
 
-        <footer class="bg-light p-3 border">
+        <footer class="container-fluid d-flex flex-wrap flex-row align-middle py-lg-0 py-2 justify-content-lg-end justify-content-center footer_bg link_border-footer">
             {% include '_footer.html.twig' %}
         </footer>
 
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}<script src="{{ asset('/js/app.js') }}"></script>{% endblock %}
     </body>
 </html>

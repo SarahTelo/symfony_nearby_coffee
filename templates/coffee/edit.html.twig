@@ -1,9 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Modifier {{ name }}{% endblock %}
+{% block subtitle %}CAFES{% endblock %}
 
 {% block body %}
+<div class="width_50 color_4">
+    {{ form(form_coffee_edit) }}
+</div>
 
-{{ form(form_coffee_edit) }}
-
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item ">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('coffee_detail', {slug:slug}) }}">◄ Retour au détail</a>
+    </li>
+</ul>
 {% endblock %}

@@ -15,11 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-use SluggerService;
+//use Slugger;
+use App\Service\Slugger;
 use App\Service\ContentRename;
-
-//TODO : mettre un autre token dans les autres routes
-//TODO : comprendre la redirection automatique
 
 /**
  * *Classe de gestion des utilisateurs (IsGranted)
@@ -123,7 +121,7 @@ class UserController extends AbstractController
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $userSlug = $slugger->slugify($userFullName). "-" .uniqid();
             //sauvegarde du nom en format slug
@@ -194,7 +192,7 @@ class UserController extends AbstractController
             //stockage du nom de l'utilisateur pour le réutiliser
             $userFullName = $user->getFirstname() . " " . $user->getLastname();
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $userSlug = $slugger->slugify($userFullName). "-" .uniqid();
             //sauvegarde du nom en format slug

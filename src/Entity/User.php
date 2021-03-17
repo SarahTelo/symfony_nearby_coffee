@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="symfony_user")
  * @UniqueEntity("email", message="L'utilisateur existe déjà")
  */
 class User implements UserInterface
@@ -56,7 +57,7 @@ class User implements UserInterface
      *      message = "Votre mot de passe doit contenir au moins 8 caractères dont 1 majuscule, 1 minuscule et 1 chiffre"
      * )
      * @Assert\Length(
-     *      min = 3, max = 255,
+     *      min = 8, max = 255,
      *      minMessage = "Minimum {{ limit }} caractères.",
      *      maxMessage = "Maximum {{ limit }} caractères."
      * )
@@ -80,8 +81,8 @@ class User implements UserInterface
      *      message = "Le prénom ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
-     *      pattern = "[[0-9]]",
-     *      match = true,
+     *      pattern = "[\d]",
+     *      match = false,
      *      message = "Le prénom ne doit pas contenir de chiffres ou de nombres."
      * )
      * @Assert\Regex(
@@ -109,8 +110,8 @@ class User implements UserInterface
      *      message = "Le nom ne doit pas contenir les caractères spéciaux suivants: = % $ < > * + } { \ / ] [ ; ( )"
      * )
      * @Assert\Regex(
-     *      pattern = "[[0-9]]",
-     *      match = true,
+     *      pattern = "[\d]",
+     *      match = false,
      *      message = "Le nom ne doit pas contenir de chiffres ou de nombres."
      * )
      * @Assert\Regex(

@@ -1,12 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Contactez nous{% endblock %}
+{% block subtitle %}CONTACT{% endblock %}
 
 {% block body %}
 
+<div class="width_50 color_4">
 {{ form(form_contact) }}
+</div>
 
-<hr>
-<a href="{{ path('main_home') }}">Retour à la page d'accueil</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item w-100 w-lg-50">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('main_home') }}">◄ Retour à la page d'accueil</a>
+    </li>
+</ul>
 
 {% endblock %}

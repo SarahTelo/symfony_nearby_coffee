@@ -1,18 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Modifier {{ name }}{% endblock %}
+{% block subtitle %}Galerie photo{% endblock %}
 
 {% block body %}
 
+<div class="width_50 color_4">
 {{ form_start(form_gallery_edit) }}
     {{ form_row(form_gallery_edit.name) }}
     {{ form_row(form_gallery_edit.description) }}
-    {# TODO : le placeholder avec le chemin du fichier quand on l'ajoute #}
-    {# {{ form_row(form_gallery_edit.image, {'attr': {'placeholder': 'templates/gallery/edit.html.twig'}}) }} #}
     {{ form_row(form_gallery_edit.image) }}
 {{ form_end(form_gallery_edit) }}
+</div>
 
-<hr>
-<a href="{{ path('gallery_list') }}">Retour à la galerie photo</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('gallery_list') }}">◄ Retour à la galerie photo</a>
+    </li>
+</ul>
+
 
 {% endblock %}

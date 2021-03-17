@@ -1,42 +1,63 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ user.firstname }} {{ user.lastname }}{% endblock %}
+{% block subtitle %}UTILISATEURS{% endblock %}
 
 {% block body %}
 
-    <p>Nom: {{ user.firstname }} {{ user.lastname }}</p>
-    <ul>
-        <li>Email: {{ user.email }}</li>
-        <li>Rôles: 
-            <ul>
-                {% for role in roles %}
-                    <li>{{ role }}</li>
-                {% endfor %} 
+<table class="table table-hover w-lg-50 w-100 color_4 table-responsive">
+    <thead>
+        <tr>
+            <th class="text-center" scope="col">Nom</th>
+            <th class="text-center" scope="col">Prénom</th>
+            <th class="text-center" scope="col">Email</th>
+            <th class="text-center" scope="col">Rôles</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td  class="text-center">{{ user.lastname }}</td>
+            <td  class="text-center">{{ user.firstname }}</td>
+            <td  class="text-center">{{ user.email }}</td>
+            <td  class="">
+            <ul class="border-0">
+            {% for role in roles %}
+            <li class="list-group link_list-item border-0">{{ role }}</li>
+            {% endfor %}
             </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+<div class="my-5">
+    <a class="text-reset" href="{{ path('user_edit', {slug:user.slug}) }}">
+        <button class="button_add p-2 font_bold">Modifier les informations</button>
+    </a>
+
+    {# affichage des lignes seulement si le slug de l'utilisateur actuel et celui de la cible sont identiques #}
+    {% if app.user.Slug == userSlug %}
+    <a class="text-reset" href="{{ path('user_edit_password', {slug:user.slug}) }}">
+        <button class="button_add p-2 font_bold">Modifier le mot de passe</button>
+    </a>
+    {% endif %}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+    <button class="button_add p-2 font_bold bg-danger button_del">Supprimer</button>
+    <a class="text-reset" href="{{ path('user_delete', {slug:user.slug}) }}">
+        <button class="button_add p-2 font_bold bg-danger button_delete button_hide">Confirmer la suppression</button>
+    </a>
+    {% endif %}
+
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <ul class="list-group list-group-flush pt-4 ">
+        <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('user_list') }}">◄ Retour à la liste des utilisateurs</a>
         </li>
-        <li>Status: {{ user.status }}</li>
     </ul>
-
-<button>
-    <a href="{{ path('user_edit', {slug:user.slug}) }}">Modifier les informations</a>
-</button>
-
-{# affichage des lignes seulement si le slug de l'utilisateur actuel et celui de la cible sont identiques #}
-{% if app.user.Slug == userSlug %}
-    <button>
-        <a href="{{ path('user_edit_password', {slug:user.slug}) }}">Modifier le mot de passe</a>
-    </button>
-{% endif %}
-
-{% if is_granted('ROLE_SUPER_ADMIN') %}
-    <button>
-        <a href="{{ path('user_delete', {slug:user.slug}) }}">Supprimer</a>
-    </button>
-{% endif %}
-
-{% if is_granted('ROLE_ADMIN') %}
-    <hr>
-    <a href="{{ path('user_list') }}">Retour à la liste</a>
-{% endif %}
-
+    {% endif %}
+</div>
 {% endblock %}

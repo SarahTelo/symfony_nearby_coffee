@@ -41,7 +41,7 @@
 | roles      | LONGTEXT | STRING               | DC2Type: json                                 | Rôles de l'utilisateur         |
 | password   | VARCHAR  | FLOAT                |                                               | Mot de passe de l'utilisateur  |
 | firstname  | VARCHAR  | STRING               |                                               | Prénom de l'utilisateur        |
-| lasttname  | VARCHAR  | STRING               |                                               | Nom de l'utilisateur           |
+| lastname   | VARCHAR  | STRING               |                                               | Nom de l'utilisateur           |
 | status     | VARCHAR  | STRING               |                                               | Status de l'utilisateur        |
 | created_at | DATETIME | DATETIME             | DEFAULT   CURRENT_TIMESTAMP                   | Date de création               |
 | updated_at | DATETIME | DATETIME             | DEFAULT   CURRENT_TIMESTAMP, NULL             | Date de mise à jour            |

@@ -1,13 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ajouter une torréfaction{% endblock %}
+{% block subtitle %}TORREFACTIONS{% endblock %}
 
 {% block body %}
-
+<div class="width_50 color_4">
 {{ form_start(form_roasting) }}
 {{ form_end(form_roasting) }}
+</div>
 
-<hr>
-<a href="{{ path('roasting_list') }}">Retour à la liste des torréfactions</a>
+
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('roasting_list') }}">◄ Retour à la liste des torréfactions</a>
+    </li>
+</ul>
 
 {% endblock %}

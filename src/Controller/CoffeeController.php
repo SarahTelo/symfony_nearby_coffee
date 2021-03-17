@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-use SluggerService;
+//use SluggerService;
+use App\Service\Slugger;
 
 /**
  * *Classe de gestion d'affichage des cafés
@@ -81,7 +82,7 @@ class CoffeeController extends AbstractController
             $coffeeName = $coffee->getName();
 
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
@@ -152,7 +153,7 @@ class CoffeeController extends AbstractController
             $coffeeName = $coffee->getName();
 
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $coffeeSlug = $slugger->slugify($coffeeName). "-" .uniqid();
             //sauvegarde du nom en format slug
@@ -182,7 +183,8 @@ class CoffeeController extends AbstractController
         {
             return $this->render('coffee/edit.html.twig', [ 
                 'form_coffee_edit' => $form->createView(), 
-                'name' => $coffee->getName() ]); 
+                'name' => $coffee->getName(), 
+                'slug' => $coffee->getSlug() ]);
         }
     }
 

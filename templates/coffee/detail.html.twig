@@ -1,22 +1,33 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - {{coffee.name}} {% endblock %}
+{% block subtitle %}CAFES{% endblock %}
 
 {% block body %}
 
-    <p>Nom: {{ coffee.name }}</p>
-    <ul>
-        <li>Pays: {{ coffee.country }}</li>
-        <li>Torréfaction: {{ coffee.roasting.name }}</li>
-        <li>Prix: {{ coffee.price }} €</li>
-    </ul>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item w-50 text-center">{{ coffee.name }}</li>
+    <li class="list-group-item link_list-item w-50">{{ coffee.roasting.name }}</li>
+    <li class="list-group-item link_list-item w-50">Pays: {{ coffee.country }}</li>
+    <li class="list-group-item link_list-item w-50">Prix: {{ coffee.price }} €</li>
+</ul>
 
+<div class="my-5 padding_4">
 {% if is_granted('ROLE_ADMIN') %}
-    <button><a href="{{ path('coffee_edit', {slug:coffee.slug}) }}">Modifier</a></button>
-    <button><a href="{{ path('coffee_delete', {slug:coffee.slug}) }}">Supprimer</a></button>
+    <a class="text-reset" href="{{ path('coffee_edit', {slug:coffee.slug}) }}">
+        <button class="button_add p-2 font_bold">Modifier</button>
+    </a>
+    <button class="button_add p-2 font_bold bg-danger button_del">Supprimer</button>
+    <a class="text-reset" href="{{ path('coffee_delete', {slug:coffee.slug}) }}">
+        <button class="button_add p-2 font_bold bg-danger button_delete button_hide">Confirmer la suppression</button>
+    </a>
 {% endif %}
+</div>
 
-<hr>
-<a href="{{ path('coffee_list') }}">Retour à la liste des cafés</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+    <a class="p-1 text-reset link_home-coffee" href="{{ path('coffee_list') }}">◄ Retour à la liste des cafés</a>
+    </li>
+</ul>
 
 {% endblock %}

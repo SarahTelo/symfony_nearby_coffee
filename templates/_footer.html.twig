@@ -1,6 +1,17 @@
-<div class="container-fluid">
-<div class="row justify-content-end">
-    <a class="col-1" href="{{ path('main_contact') }}">Contact</a>
-    <a class="col-1" href="{{ path('main_about') }}">A propos</a>
+
+<div class="d-flex flex-row justify-content-center align-self-center">
+    <a class="text-center p-1 margin_1" href="https://www.linkedin.com/in/sarah-f-dev" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}linkedin.svg" alt="logo linkedin">
+    </a>
+    <a class="text-center p-1 margin_1" href="https://github.com/SarahTelo" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}github.svg" alt="logo github">
+    </a>
+    <a class="text-center p-1 margin_1" href="mailto:contact@sarah-dev.com" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}mail.svg" alt="logo envoyer un mail">
+    </a>
 </div>
+
+<div class="d-flex align-self-center">
+    <a class="text-reset margin_1" href="{{ path('main_contact') }}">Contact</a>
+    <a class="text-reset margin_1" href="{{ path('main_about') }}">A propos</a>
 </div>

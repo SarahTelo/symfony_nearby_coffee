@@ -3,6 +3,7 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+<div class="width_50 color_4">
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -39,4 +40,5 @@
         Valider
     </button>
 </form>
+</div>
 {% endblock %}

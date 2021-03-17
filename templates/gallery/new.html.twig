@@ -1,14 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ajouter une image{% endblock %}
+{% block subtitle %}Galerie photo{% endblock %}
 
 {% block body %}
 
 {# TODO : le placeholder avec le chemin du fichier quand on l'ajoute #}
+<div class="width_50 color_4">
 {{ form_start(form_gallery) }}
+    {{ form_row(form_gallery.name) }}
+    {{ form_row(form_gallery.description) }}
+    {{ form_row(form_gallery.image, {'attr': {'class': 'placeholder_image'}}) }}
 {{ form_end(form_gallery) }}
+</div>
 
-<hr>
-<a href="{{ path('gallery_list') }}">Retour à la galerie photo</a>
+
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('gallery_list') }}">◄ Retour à la galerie photo</a>
+    </li>
+</ul>
 
 {% endblock %}

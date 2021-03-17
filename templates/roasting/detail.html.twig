@@ -1,32 +1,48 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - {{ roasting.name }}{% endblock %}
+{% block subtitle %}TORREFACTIONS{% endblock %}
 
 {% block body %}
 
-<p>{{ roasting.name }}</p>
-<table>
-    <th>Liste des cafés {{ roasting.name }}</th>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item w-50 text-center text-uppercase">{{ roasting.name }}</li>
+</ul>
 
-        {% for coffee in coffees %}
-            <tr>
-                <td>{{ coffee.name }}</td>
-            </tr>
-        {% endfor %}
-        
-        <tr>
-            <td>Total: {{ coffeesNumber }}</td>
-        </tr>
-</table>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item w-50 text-center">Listes des cafés {{ roasting.name }}</li>
+    {% for coffee in coffees %}
+    <li class="list-group-item link_list-item w-50"><a class= "text-reset" href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a></li>
+    {% endfor %}
+    {% if is_granted('ROLE_ADMIN') %}
+    <li class="list-group-item link_list-item w-50">Total: {{ coffeesNumber }} cafés</li>
+    {% endif %}
+</ul>
 
-
-
+<div class="my-5 padding_4">
 {% if is_granted('ROLE_ADMIN') %}
-    <button><a href="{{ path('roasting_edit', {id:roasting.id}) }}">Modifier</a></button>
-    <button><a href="{{ path('roasting_delete', {id:roasting.id}) }}">Supprimer</a></button>
+    <a class="text-reset" href="{{ path('roasting_edit', {id:roasting.id}) }}">
+        <button class="button_add p-2 font_bold">Modifier</button>
+    </a>
+    <button class="button_add p-2 font_bold bg-danger button_del">Supprimer</button>
+    <a class="text-reset" href="{{ path('roasting_delete', {id:roasting.id}) }}">
+        <button class="button_add p-2 font_bold bg-danger button_delete button_hide">Confirmer la suppression</button>
+    </a>
 {% endif %}
+</div>
 
-<hr>
-<a href="{{ path('roasting_list') }}">Retour à la liste des torréfactions</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('roasting_list') }}">◄ Retour à la liste des torréfactions</a>
+    </li>
+</ul>
+
+
+
+
+
+
+
+
 
 {% endblock %}

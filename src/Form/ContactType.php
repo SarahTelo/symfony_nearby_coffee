@@ -64,7 +64,7 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label' => 'Votre message',
                 'required' => false,
-                'help' => 'maximum 500 caratères',
+                'help' => 'champ obligatoire, maximum 500 caratères',
                 'attr' => ['placeholder' => 'Saisir votre message'],
                 'constraints' => [
                     new NotBlank(['message' => 'Champ obligatoire']),

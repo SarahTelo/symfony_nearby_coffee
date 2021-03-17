@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=CoffeeRepository::class)
+ * @ORM\Table(name="symfony_coffee")
  * @UniqueEntity("name", message="Le café existe déjà")
  */
 class Coffee

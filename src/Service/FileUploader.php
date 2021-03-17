@@ -5,7 +5,8 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use SluggerService;
+//use SluggerService;
+use App\Service\Slugger;
 
 /**
  * *Service permettant l'upload des fichiers
@@ -24,7 +25,7 @@ class FileUploader
         //on récupère les données du fichier d'origine
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         //instancier le service
-        $slugger = new SluggerService();
+        $slugger = new Slugger();
         //appel de la fonction du service
         $safeFilename = $slugger->slugify($originalFilename);
         //réécriture du nom du fichier
