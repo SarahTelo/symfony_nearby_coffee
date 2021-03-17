@@ -2,15 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-//todo mettre à "false" le "match [0-9]" de firstname et lastname (pour activer la regex)
-//todo mettre à 8 le "min" de "length" du password
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
