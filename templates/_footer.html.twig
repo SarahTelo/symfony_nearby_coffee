@@ -1,16 +1,17 @@
 
-<footer style="text-align: end;">
+<div class="d-flex flex-row justify-content-center align-self-center">
+    <a class="text-center p-1 margin_1" href="https://www.linkedin.com/in/sarah-f-dev" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}linkedin.svg" alt="logo linkedin">
+    </a>
+    <a class="text-center p-1 margin_1" href="https://github.com/SarahTelo" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}github.svg" alt="logo github">
+    </a>
+    <a class="text-center p-1 margin_1" href="mailto:contact@sarah-dev.com" target="_blank" rel="noreferrer">
+        <img class="logo_64px p-2 testing" src="{{ asset('/logo/') }}mail.svg" alt="logo envoyer un mail">
+    </a>
+</div>
 
-{# 
-    <hr>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <button><a href="{{ path('app_logout') }}">déconnexion</a></button>
-    {% else %}
-        <button><a href="{{ path('app_login') }}">connexion</a></button>
-    {% endif %} 
-#}
-
-    <a href="{{ path('main_contact') }}">Contact</a>
-    <a href="{{ path('main_about') }}">A propos</a>
-
-</footer>
+<div class="d-flex align-self-center">
+    <a class="text-reset margin_1" href="{{ path('main_contact') }}">Contact</a>
+    <a class="text-reset margin_1" href="{{ path('main_about') }}">A propos</a>
+</div>

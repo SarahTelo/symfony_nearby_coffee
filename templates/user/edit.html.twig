@@ -1,12 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier {{ name }}{% endblock %}
+{% block subtitle %}UTILISATEURS{% endblock %}
 
 {% block body %}
 
+<div class="width_50 color_4">
 {{ form(form_user_edit) }}
+</div>
 
-<hr>
-<a href="{{ path('user_detail', {slug:userSlug}) }}">Retour au détail</a>
+
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('user_detail', {slug:userSlug}) }}">◄ Retour au détail</a>
+    </li>
+</ul>
 
 {% endblock %}

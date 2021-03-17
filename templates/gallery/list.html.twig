@@ -1,28 +1,39 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Galerie photo{% endblock %}
+{% block subtitle %}Galerie photo{% endblock %}
 
 {% block body %}
 
-{% if is_granted('ROLE_RESPONSIBLE') %}
-    <a href="{{ path('gallery_new') }}">Ajouter une nouvelle photo</a>
-<hr>
+{% if is_granted('ROLE_ADMIN') %}
+<a class="text-reset padding_4" href="{{ path('gallery_new') }}">
+    <button class="button_add p-2 font_bold">Ajouter</button>
+</a>
 {% endif %}
 
-{% for image in gallery %}
-    <div class="card", style="width:18rem;">
-        <a href="#">
-            <img class="card-img-top" src="{{ asset('/images/' ) }}{{image.way}}" alt="alternative '{{ image.slug }}'">
+<div class="d-flex flex-row flex-wrap pt-4">
+    {% for image in gallery %}
+    <div class="card card_bg border-0 mx-3">
+        <a class="text-center" href="#">
+            <img class="card-img-top logo_64" src="{{ asset('/images/' ) }}{{image.way}}" alt="alternative '{{ image.slug }}'">
         </a>
-        <div class="card-body">
+        <div class="card-body color_4">
             <h5 class="card-title">{{ image.name }}</h5>
             <p>{{ image.description }}</p>
-            {% if is_granted('ROLE_RESPONSIBLE') %}
-                <button><a href="{{ path('gallery_edit', {slug:image.slug}) }}">Modifier</a></button>
-                <button><a href="{{ path('gallery_delete', {slug:image.slug}) }}">Supprimer</a></button>
-            {% endif %}
+            <div class="d-flex flex-column">
+                {% if is_granted('ROLE_RESPONSIBLE') %}
+                <a class="text-reset" href="{{ path('gallery_edit', {slug:image.slug}) }}">
+                    <button class="button_add p-2 font_bold">Modifier</button>
+                </a>
+                <button class="button_add p-2 font_bold bg-danger button_del">Supprimer</button>
+                <a class="text-reset" href="{{ path('gallery_delete', {slug:image.slug}) }}">
+                    <button class="button_add p-2 font_bold bg-danger button_delete button_hide">Confirmer la suppression</button>
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
-{% endfor %}
+    {% endfor %}
+</div>
 
 {% endblock %}

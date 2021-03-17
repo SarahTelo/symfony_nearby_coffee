@@ -1,11 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}NearBy Coffe Acceuil{% endblock %}
+{% block title %}Nearby Coffe Accueil{% endblock %}
+{% block subtitle %}{#I LOVE YOU ♥#}BIENVENUE{% endblock %}
 
 {% block body %}
 
-<h1>BIENVENUE</h1>
+    <div class="col-lg-5 color_4">
+        <h3 class="py-2">Présentation</h3>
+        <p>Nearby coffee permet de visualiser les fonctionalités en place côté Backend: Framework Symfony.</p>
+        <p class="font_bold text-uppercase fst-italic bg-danger text-center">Le responsive est en cours</p>
+    </div>
 
-{# TODO : mettre le dernier café ajouté #}
+    <div class="col-lg-5 color_4">
+        <h3 class="py-2">Dernier café ajouté</h3>
+        <div class="align-self-center">
+            {% for coffee in lastCoffee %}
+                <div class="py-1">
+                    <h4 class="title_h3 d-inline-block">Nom:</h4>
+                    <p class="px-2 d-inline-block">{{ coffee.name }}</p>
+                    <a class= "px-2 link_home-coffee text-reset" href="{{ path('coffee_detail', {slug:coffee.slug}) }}">voir</a>
+                </div>
+                <div class="py-1">
+                    <h4 class="title_h3 d-inline-block">Torréfaction:</h4>
+                    <p class="px-2 d-inline-block">{{ coffee.roasting.name }}</p>
+                    <a class= "px-2 link_home-coffee text-reset" href="{{ path('roasting_detail', {id:coffee.roasting.id}) }}">voir</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}

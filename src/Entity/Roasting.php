@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=RoastingRepository::class)
+ * @ORM\Table(name="symfony_roasting")
  * @UniqueEntity("name", message="La torréfcation existe déjà.")
  */
 class Roasting

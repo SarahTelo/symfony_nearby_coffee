@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - A propos{% endblock %}
+{% block subtitle %}A PROPOS{% endblock %}
 
 {% block body %}
 
-<div style="text-align: center;">
+<div class="w-100 w-lg-50 text-center pt-5">
     <h2>
         Un double latte avec beaucoup de crème s'il vous plait!
     </h2>
@@ -16,7 +17,10 @@
     </i>
 </div>
 
-<hr>
-<a href="{{ path('main_home') }}">Retour à la page d'accueil</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item w-100 w-lg-50">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('main_home') }}">◄ Retour à la page d'accueil</a>
+    </li>
+</ul>
 
 {% endblock %}

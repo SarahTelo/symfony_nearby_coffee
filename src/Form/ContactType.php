@@ -13,8 +13,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-//TODO : mettre les contraintes, les caractérisques et les attributs
-
 class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -66,7 +64,7 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label' => 'Votre message',
                 'required' => false,
-                'help' => 'maximum 500 caratères',
+                'help' => 'champ obligatoire, maximum 500 caratères',
                 'attr' => ['placeholder' => 'Saisir votre message'],
                 'constraints' => [
                     new NotBlank(['message' => 'Champ obligatoire']),

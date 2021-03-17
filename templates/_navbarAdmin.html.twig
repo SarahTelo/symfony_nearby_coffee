@@ -1,0 +1,23 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <nav class="nav nav-tabs nav-fill d-flex flex-row border-0 align-self-center align-middle padding_2 line_height text-uppercase">
+        <div class="nav-item link_border">
+            <a class="nav-link link_item color_4 text-capitalize" href="{{ path('user_detail', {slug:app.user.slug}) }}">Bonjour {{ app.user.firstname }}</a>
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="nav-item link_border margin_1">
+            <a class="nav-link link_item color_4"  href="{{ path('user_list') }}">Liste des utilisateurs</a>
+        </div>
+        {% endif %}
+
+        <div class="nav-item link_border margin_1 link_adm-btn color_4">
+            <a class="nav-link text-capitalize link_adm-button color_4" href="{{ path('app_logout') }}">Déconnexion</a>
+        </div>
+{% else %}
+        <div class="nav-item link_border margin_1 link_adm-btn color_4 margin_3">
+            <a class="nav-link text-capitalize link_adm-button color_4" href="{{ path('app_login') }}">Se connecter</a>
+        </div>
+    </nav>
+{% endif %}
+
+
+

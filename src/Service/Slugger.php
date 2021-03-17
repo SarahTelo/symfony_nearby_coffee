@@ -1,8 +1,10 @@
 <?php
 
+namespace App\Service;
+
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
-class SluggerService
+class Slugger
 {
     private $slugger;
 

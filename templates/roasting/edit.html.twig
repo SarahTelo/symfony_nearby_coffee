@@ -1,12 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Modifier {{ name }}{% endblock %}
+{% block subtitle %}TORREFACTIONS{% endblock %}
 
 {% block body %}
 
+<div class="width_50 color_4">
 {{ form(form_roasting_edit) }}
+</div>
 
-<hr>
-<a href="{{ path('roasting_detail', {id:roastingId}) }}">Retour au détail</a>
+<ul class="list-group list-group-flush pt-4 ">
+    <li class="list-group-item link_list-item">
+        <a class="p-1 text-reset link_home-coffee" href="{{ path('roasting_detail', {id:roastingId}) }}">◄ Retour au détail</a>
+    </li>
+</ul>
 
 {% endblock %}

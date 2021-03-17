@@ -1,24 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nearby Coffee - Cafés servis{% endblock %}
+{% block subtitle %}CAFES{% endblock %}
 
 {% block body %}
 
 {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('coffee_new') }}">Ajouter un nouveau café</a>
-<hr>
+<a class="text-reset padding_4" href="{{ path('coffee_new') }}">
+    <button class="button_add p-2 font_bold">Ajouter</button>
+</a>
 {% endif %}
 
-{# TODO : Trier par nom et par torréfaction #}
-<table>
-    <th class="classify">Nom</th>
-    <th class="classify">Torréfaction</th>
-        {% for coffee in coffees %}
-            <tr>
-                <td><a class= "coffee_list-item" href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a></td>
-                <td>{{ coffee.roasting.name }}</td>
-            </tr>
-        {% endfor %}
-</table>
+<ul class="list-group list-group-flush pt-4 ">
+    {% for coffee in coffees %}
+    <li class="list-group-item link_list-item w-50">
+        <a class= "text-reset" href="{{ path('coffee_detail', {slug:coffee.slug}) }}">{{ coffee.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

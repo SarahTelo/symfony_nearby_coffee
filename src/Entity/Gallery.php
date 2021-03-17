@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
+ * @ORM\Table(name="symfony_gallery")
  * @UniqueEntity("name", message="La photo existe déjà.")
  */
 class Gallery

@@ -1,41 +1,52 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
+{% block subtitle %}UTILISATEURS{% endblock %}
 
 {% block body %}
 
-<table>
-    <th>Nom</th>
-    <th>Prénom</th>
-    <th>Administrateur</th>
-    <th>Responsable</th>
-    <th></th>
+{% if is_granted('ROLE_ADMIN') %}
+<div class="pb-4">
+    <a class="text-reset" href="{{ path('user_new') }}">
+        <button class="button_add p-2 font_bold">Ajouter</button>
+    </a>
+</div>
+{% endif %}
+
+<table class="table table-hover w-lg-50 w-100 color_4 table-responsive">
+    <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Administrateur</th>
+            <th scope="col">Responsable</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
         {% for key, user in users %}
-            <tr>
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>
-                    {% for role in user.roles %}
-                        {% if role == 'ROLE_ADMIN' %} 
-                            A
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for role in user.roles %}
-                        {% if role == 'ROLE_RESPONSIBLE' %} 
-                            R
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td><a href="{{ path('user_detail', {slug:user.slug}) }}">Détail</a></td>
-            </tr>
+        <tr>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.firstname }}</td>
+            <td class="text-center">
+                {% for role in user.roles %}
+                {% if role == 'ROLE_ADMIN' %} 
+                    A
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td class="text-center">
+                {% for role in user.roles %}
+                {% if role == 'ROLE_RESPONSIBLE' %} 
+                    R
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td><a class="px-2 link_home-coffee text-reset" href="{{ path('user_detail', {slug:user.slug}) }}">Détail</a></td>
+        </tr>
         {% endfor %}
+    </tbody>
 </table>
 
-{% if is_granted('ROLE_ADMIN') %}
-    <hr>
-    <button><a href="{{ path('user_new') }}">Ajouter un utilisateur</a></button>
-{% endif %}
 
 {% endblock %}

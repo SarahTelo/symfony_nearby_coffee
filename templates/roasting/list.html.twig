@@ -1,21 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nearby Coffee - Liste des torréfaction{% endblock %}
+{% block title %}Nearby Coffee - Torréfactions{% endblock %}
+{% block subtitle %}TORREFACTIONS{% endblock %}
 
 {% block body %}
 
 {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('roasting_new') }}">Ajouter une nouvelle torréfaction</a>
-    <hr>
+<a class="text-reset padding_4" href="{{ path('roasting_new') }}">
+    <button class="button_add p-2 font_bold padding_4">Ajouter</button>
+</a>
 {% endif %}
 
-<table>
-    <th class="classify">Nom</th>
-        {% for roasting in roastings %}
-            <tr>
-                <td><a class= "roasting_list-item" href="{{ path('roasting_detail', {id:roasting.id}) }}">{{ roasting.name }}</a></td>
-            </tr>
-        {% endfor %}
-</table>
+<ul class="list-group list-group-flush pt-4 ">
+    {% for roasting in roastings %}
+    <li class="list-group-item link_list-item w-50">
+        <a class= "text-reset" href="{{ path('roasting_detail', {id:roasting.id}) }}">{{ roasting.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

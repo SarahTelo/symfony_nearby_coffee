@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use SluggerService;
+//use SluggerService;
+use App\Service\Slugger;
 use App\Service\FileUploader;
 
 /**
@@ -68,7 +69,7 @@ class GalleryController extends AbstractController
             $galleryName = $gallery->getName();
 
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $gallerySlug = $slugger->slugify($galleryName). "-" .uniqid();
             //sauvegarde du nom en format slug
@@ -146,7 +147,7 @@ class GalleryController extends AbstractController
             $galleryName = $gallery->getName();
 
             //instancier le service
-            $slugger = new SluggerService();
+            $slugger = new Slugger();
             //appel de la fonction du service + ajout d'un identifiant unique (basé sur la date et l'heure)
             $gallerySlug = $slugger->slugify($galleryName). "-" .uniqid();
             //sauvegarde du nom en format slug

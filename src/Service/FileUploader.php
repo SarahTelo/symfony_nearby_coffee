@@ -5,7 +5,8 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use SluggerService;
+//use SluggerService;
+use App\Service\Slugger;
 
 /**
  * *Service permettant l'upload des fichiers
@@ -24,7 +25,7 @@ class FileUploader
         //on récupère les données du fichier d'origine
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         //instancier le service
-        $slugger = new SluggerService();
+        $slugger = new Slugger();
         //appel de la fonction du service
         $safeFilename = $slugger->slugify($originalFilename);
         //réécriture du nom du fichier
@@ -43,7 +44,7 @@ class FileUploader
         return $fileName;
     }
 
-    // TODO : à rendre universelle pour la suppression des fichiers
+    // todo : à rendre universelle pour la suppression des fichiers
     /**
      * *Suppression du fichier physique d'une photo
      *
@@ -57,7 +58,7 @@ class FileUploader
         //création du chemin complet
         $pathToRemove = $path . "/" . $fileName;
 
-        //TODO vérifier qu'il n'est pas un fichier système?
+        //todo vérifier qu'il n'est pas un fichier système?
         
         //effacement du fichier physique s'il existe et s'il est dans le dossier spécifique
         if (file_exists($pathToRemove) && str_contains($path, '/public/images')) {

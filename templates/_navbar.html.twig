@@ -1,25 +1,13 @@
 
-<nav>
-
-<a href="{{ path('main_home') }}">Accueil</a>
-<hr>
-
-<a href="{{ path('coffee_list') }}">Cafés</a>
-<hr>
-
-<a href="{{ path('roasting_list') }}">Torréfactions</a>
-<hr>
-
-<a href="{{ path('gallery_list') }}">Galerie photo</a>
-<hr>
-
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <a href="{{ path('user_detail', {slug:app.user.slug}) }}">Mon profil</a>
-    <hr>
-{% endif %}
-{% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('user_list') }}">Liste des utilisateurs</a>
-    <hr>
-{% endif %}
-
-</nav>
+<div class="nav-item font_bold link_border color_2 margin_1">
+    <a class="nav-link link_item color_4" href="{{ path('main_home') }}">ACCUEIL</a>
+</div>
+<div class="nav-item font_bold link_border color_2 margin_1">
+    <a class="nav-link link_item color_4" href="{{ path('coffee_list') }}">CAFES</a>
+</div>
+<div class="nav-item font_bold link_border color_2 margin_1">
+    <a class="nav-link link_item color_4" href="{{ path('roasting_list') }}">TORREFACTIONS</a>
+</div>
+<div class="nav-item font_bold link_border color_2 margin_1">
+    <a class="nav-link link_item color_4" href="{{ path('gallery_list') }}">GALERIE PHOTO</a>
+</div>
