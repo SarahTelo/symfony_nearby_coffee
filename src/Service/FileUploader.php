@@ -37,7 +37,7 @@ class FileUploader
         } catch (FileException $e) {
             // ... handle exception if something happens during file upload
             //création d'une exception de type "fichier"
-            //! TODO : arriver à l'exception: à traiter avec test unitaire?
+            //! TODO
             dd('affichage de l\'excetpion, aller voir dans \'src\Service\FileUploader.php\': UPLOAD : ', $e);
         }
 
@@ -57,8 +57,6 @@ class FileUploader
         $path = $this->getTargetDirectory();
         //création du chemin complet
         $pathToRemove = $path . "/" . $fileName;
-
-        //todo vérifier qu'il n'est pas un fichier système?
         
         //effacement du fichier physique s'il existe et s'il est dans le dossier spécifique
         if (file_exists($pathToRemove) && str_contains($path, '/public/images')) {
@@ -66,7 +64,7 @@ class FileUploader
                 //suppression du fichier
                 unlink($pathToRemove);
             } catch (FileException $e) {
-                //! TODO : arriver à l'exception: à traiter avec test unitaire?
+                //! TODO
                 dd('affichage de l\'excetpion, aller voir dans \'src\Service\FileUploader.php\': DELETE : ', $e);
             }
             return true;
